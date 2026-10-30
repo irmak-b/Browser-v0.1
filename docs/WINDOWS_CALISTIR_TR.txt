@@ -1,0 +1,24 @@
+Browser Core - Windows x64
+
+1. Dagitim ZIP'inin tamamini bir klasore cikarin.
+2. BrowserCore.exe dosyasini acin.
+3. Adres alanina web adresi veya arama yazip Enter'a basin.
+
+EXE, DLL, locales ve resources dosyalari birlikte kalmalidir.
+Paket disaridan Node/npm kurulumu gerektirmez.
+
+Bilgi paneli sag ustteki menu dugmesiyle acilir. Test sayfasi,
+indirmeler, site izinleri ve kaynak bilgileri bu paneldedir.
+Panel kapaliyken sayfa tum genisligi kullanir.
+
+Ctrl+L: adres alani. Ctrl+T/W: yeni sekme/kapat.
+Ctrl+Shift+T: kapatilan sekmeyi ac. Ctrl+F: sayfada ara.
+F5: yenile. Ctrl+F5: acik sayfayi onbellegi atlayarak yenile.
+Esc: tam ekrandan veya aramadan cik.
+
+Gecmis servisi gelistirme amacli ve bellektedir; uygulama kapaninca silinir.
+Gercek auth/API/Neon ve TOTP/kasa entegrasyonlari tamamlanmamistir.
+Reklam filtresi siteye gore acilip kapatilabilir; her reklami engelleme garantisi yoktur.
+Indirmeler otomatik acilmaz. Gercek siteler normal ag trafigi kullanir.
+
+Uygulama imzasizdir. Guvenlik yazilimi devre disi birakilmamalidir.

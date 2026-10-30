@@ -1,0 +1,5 @@
+! Browser Core supplemental rules — 2026-10-28
+! Player API regression: upstream rules leave playerAds in fetch and XHR.
+! Restrict to YouTube player APIs; never block video/media delivery.
+www.youtube.com,m.youtube.com,music.youtube.com##+js(json-prune-fetch-response, playerAds adPlacements adSlots playerResponse.playerAds playerResponse.adPlacements playerResponse.adSlots [].playerResponse.playerAds [].playerResponse.adPlacements [].playerResponse.adSlots, , propsToMatch, url:/\/youtubei\/v1\/(player|get_watch)(\?|$)/)
+www.youtube.com,m.youtube.com,music.youtube.com##+js(json-prune-xhr-response, playerAds adPlacements adSlots playerResponse.playerAds playerResponse.adPlacements playerResponse.adSlots [].playerResponse.playerAds [].playerResponse.adPlacements [].playerResponse.adSlots, , propsToMatch, url:/\/youtubei\/v1\/(player|get_watch)(\?|$)/)

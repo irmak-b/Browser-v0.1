@@ -1,0 +1,9 @@
+Bundled ad-filter components
+
+Ghostery adblocker 2.20.1 and its dependencies: versions, source links and individual licenses in packages.json and accompanying LICENSE files.
+EasyList: The EasyList authors, https://easylist.to/ (GPL-3.0-or-later alternative selected).
+uBlock Origin filters and scriptlet resources: https://github.com/uBlockOrigin/uAssets and https://github.com/gorhill/uBlock (GPL v3; see uAssets-LICENSE.txt).
+AdGuard Turkish filter: https://github.com/AdguardTeam/AdguardFilters (GPL v3; see AdGuard-LICENSE.txt).
+Peter Lowe server list: https://pgl.yoyo.org/adservers/ (see snapshot header).
+
+Original filter data, metadata, hashes, build script and complete Browser Core source are supplied in the accompanying full source ZIP. No automatic subscription downloads are enabled.

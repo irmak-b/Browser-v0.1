@@ -1,0 +1,13 @@
+import {spawn} from 'node:child_process';
+import {resolve,sep} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {existsSync} from 'node:fs';
+const root=fileURLToPath(new URL('../',import.meta.url));
+const output=resolve(process.argv[2]||'');
+if(!process.argv[2]||!output.startsWith(resolve(root,'docs/evidence')+sep)||existsSync(output))throw Error('New workspace evidence path required');
+const executable=resolve(root,'node_modules/electron/dist/electron.exe');
+if(!existsSync(executable))throw Error('Installed runtime required, no download');
+const env={...process.env};delete env.ELECTRON_RUN_AS_NODE;delete env.ELECTRON_RENDERER_URL;delete env.NODE_OPTIONS;
+const child=spawn(executable,[resolve(root,'tests/fixtures/browserbench-control.cjs'),'--bench-record='+output],{cwd:root,env,detached:true,stdio:'ignore',windowsHide:true});
+child.on('error',()=>{console.error('Control launch failed');process.exitCode=1;});
+child.unref();console.log(JSON.stringify({controlPid:child.pid,record:output}));

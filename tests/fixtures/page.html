@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="UTF-8"><title>Browser Core — Test Sayfası</title>
+<style>body{font:18px system-ui;margin:0;background:#f5f7fc;color:#19233d}main{max-width:650px;margin:64px auto;padding:40px;background:white;border:1px solid #dce3ef;border-radius:16px}small{color:#526591;letter-spacing:2px}h1{font-size:34px}p{line-height:1.7}a,button{color:#3157b7;font:inherit}button{padding:9px 15px;background:#eef2ff;border:1px solid #bfcdf2;border-radius:8px}output{display:block;margin-top:16px}</style></head>
+<body><main><small>KONTROLLÜ YEREL SAYFA</small><h1>Gerçek Chromium sayfası açık.</h1>
+<p>Bu içerik ayrı bir WebContentsView içinde çalışıyor. Sayfa başlığı Browser Core üzerinden React ekranına dönüyor.</p>
+<p>Uygulama köprüsü, Node.js ve gerçek hesap verileri bu sayfada bulunmaz.</p>
+<button id="change-title">Sayfa başlığını değiştir</button>
+<output id="result" aria-live="polite"></output>
+<p><a href="/second">İkinci kontrollü sayfa</a> · <a id="popup-link" href="/popup" target="_blank">Popup denemesi</a> · <a href="/error">Hata yanıtı</a></p>
+<p><a href="/session">Oturum ve izin denemesi</a> · <a href="/download">Yerel dosya (4096 bayt)</a> · <a href="/download-slow">Yavaş yerel dosya (128 KiB)</a></p>
+<script src="/fixture.js"></script></main></body></html>

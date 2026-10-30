@@ -1,0 +1,43 @@
+{
+  "name": "browser-core",
+  "version": "1.0.14",
+  "private": true,
+  "description": "Browser Core Windows prototype with local ad blocking and background resource management",
+  "main": "out/main/index.js",
+  "packageManager": "npm@11.13.0",
+  "engines": {
+    "node": ">=24.16.0 <25"
+  },
+  "scripts": {
+    "predev": "node scripts/check-runtime.mjs",
+    "dev": "electron-vite dev",
+    "prebuild": "node scripts/compile-ad-filters.mjs",
+    "build": "electron-vite build",
+    "setup:electron": "install-electron",
+    "start": "node scripts/start.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/unit/*.test.ts",
+    "test:electron": "node scripts/check-runtime.mjs && playwright test",
+    "package:windows": "pwsh -NoProfile -File scripts/package-windows.ps1",
+    "export:windows": "pwsh -NoProfile -File scripts/export-windows.ps1",
+    "test:packaged": "playwright test --config playwright.packaged.config.ts",
+    "check": "npm run typecheck && npm test && npm run build && npm run test:electron"
+  },
+  "dependencies": {
+    "@ghostery/adblocker": "2.20.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@types/node": "24.19.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "electron": "45.0.0",
+    "electron-vite": "6.0.0",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vite": "8.3.5"
+  }
+}
