@@ -4,6 +4,8 @@
 
 Electron45.0.0, React19.3.1 ve TypeScript7.0.2 kullanılır. Node24.16.0 ve npm11.13.0 kayıtlı geliştirme sürümleridir. Bağımlılık sürümleri `package.json` ve `package-lock.json` içinde sabittir.
 
+Node aralığı `>=24.16.0 <25`'tir. [Hızlı başlangıç](README.md#hızlı-başlangıç), araçların resmi indirme bağlantılarını, klonlama/ZIP adımlarını ve ilk açılışı içerir. Windows x64 doğrulanan hedeftir. PowerShell 7 yalnız `pwsh` kullanan paketleme/export komutlarında gereklidir.
+
 ## Kaynaktan çalıştırma
 
 Komutlar depo kökünde çalıştırılır:
@@ -15,6 +17,8 @@ npm run dev
 ```
 
 Bağımlılık ve Electron kurulumu ağ kullanır. Mevcut runtime yeniden kurulmadan kullanılabilir. Geliştirme için gerçek veritabanı veya hesap bilgisi gerekmez.
+
+Sonraki açılışlarda `npm run dev` çalıştırılır. Pencere açıldığında **☰ → Test sayfasını aç** ile yerel kontrol yapılabilir. Terminalden Ctrl+C geliştirme oturumunu durdurur.
 
 ## Kontroller
 

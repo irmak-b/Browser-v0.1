@@ -209,14 +209,14 @@
     },
     {
       "path": "README_TR.md",
-      "bytes": 2069,
-      "sha256": "f3d373f126d81685ba5b461992d77e5ed46e04afc8e18d9db1e42dd85a30224f",
+      "bytes": 2579,
+      "sha256": "95c24a41582da2a4390c295b151e34d1ce61c7581271139f9d71b655c3a11ac7",
       "reviewFlags": []
     },
     {
       "path": "README.md",
-      "bytes": 1779,
-      "sha256": "fcf6874c654399d67b147b8e1d4f48e106e6345ae2c7777b11f5f4142d483b1f",
+      "bytes": 5981,
+      "sha256": "a6df49389d5480368e28fa63c1da4f1ba4d16e6d24cbfbc52b2d8ff9f2b89cfe",
       "reviewFlags": []
     },
     {
@@ -1169,7 +1169,7 @@
     }
   ],
   "fileCount": 194,
-  "totalBytes": 10142110,
+  "totalBytes": 10146822,
   "reviewFlaggedFiles": 0,
   "excluded": [
     "node_modules/",
