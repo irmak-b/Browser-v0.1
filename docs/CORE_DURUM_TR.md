@@ -1,6 +1,6 @@
 # Özellikler ve eksikler
 
-**Uygulama:** V1.0.14.0
+**Uygulama:** V1.0.14.1
 
 | Alan | Mevcut kapsam |
 | --- | --- |

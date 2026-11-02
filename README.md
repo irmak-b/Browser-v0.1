@@ -2,7 +2,13 @@
 
 Electron, React ve TypeScript tabanlı masaüstü tarayıcı çekirdeği. Chromium sayfaları ayrı `WebContentsView` içinde çalışır.
 
-**Sürüm:** V1.0.14.0 · **Temel plan:** BrowserPlan V1.0.1.0
+**Sürüm:** V1.0.14.1 · **Temel plan:** BrowserPlan V1.0.1.0
+
+## V1.0.14.1 değişikliği
+
+Yandex sonuçları ve Yahoo araması gibi başka bir alan adına yeni sekme açan bağlantılardaki gereksiz aynı kaynak kısıtı kaldırıldı. Kullanıcı tıklaması veya Enter ile açılan HTTP(S) GET hedefleri kontrollü sekmelerde açılır; orta tuş arka plan sekmesini korur. Otomatik popup engeli, tek etkileşimde tek açılış ve site izolasyonu devam eder. Arayüzdeki mevcut karakter/tema eklemeleri korunur; yeni bağımlılık veya sürekli arka plan kontrolü eklenmez.
+
+Tip kontrolü, üretim derlemesi, beş yeni popup senaryosu, üç mevcut güvenlik/popup kontrolü ve bağımsız Windows paket açılışı doğrulandı. Yandex ve Yahoo akışları gerçek sitelerde elle de kontrol edildi. POST formları ve opener gerektiren özel giriş pencereleri ayrı destek gerektirir. [Ayrıntılı doğrulama](docs/validation/V1.0.14.1.md).
 
 ## Hızlı başlangıç
 
@@ -84,7 +90,7 @@ Browser Core ve geçici DevShell çalışır. Geçmiş servisi bellekte tutulur.
 - [Mimari](docs/browser-plan/ARCH.md)
 - [UI–Core sözleşmesi](docs/browser-plan/SOZLESME.md)
 - [Geliştirme ve çalıştırma](README_TR.md)
-- [Test planı](docs/browser-plan/TEST.md) · [Sürüm doğrulaması](docs/validation/V1.0.14.0.md)
+- [Test planı](docs/browser-plan/TEST.md) · [Sürüm doğrulaması](docs/validation/V1.0.14.1.md)
 
 ## Teknik sınırlar
 

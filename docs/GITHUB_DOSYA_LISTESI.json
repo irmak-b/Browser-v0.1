@@ -1,5 +1,5 @@
 {
-  "version": "V1.0.14.0",
+  "version": "V1.0.14.1",
   "method": "Explicit source allowlist; no Git index, remote, commit or push. Never reads excluded secret/profile/cache/tool files. Limited pattern scan of included text is not a comprehensive secret guarantee. Review flags contain category and file name only, never matching content.",
   "manifestSelf": "This JSON is intended for the repository too, but excludes its own hash to avoid a circular manifest.",
   "files": [
@@ -12,7 +12,7 @@
     {
       "path": "app-version.json",
       "bytes": 77,
-      "sha256": "b15d67393b247e06936c45be4d0b23f58c0f0a98ff596c314c973547e48b0953",
+      "sha256": "de297f9da0cb6d75548dedeb7c1791610477a70ef1b035df01fe303a46e0696c",
       "reviewFlags": []
     },
     {
@@ -30,13 +30,13 @@
     {
       "path": "docs/browser-plan/PLAN.md",
       "bytes": 2558,
-      "sha256": "1ffc7bb5097a4eebdfa1ff277e0bf8bdf3fdf594ad18aca5e097411148aa9595",
+      "sha256": "b79e24c44cda31c15b0cce0032a19ff7abfa568cfd9b9f7852186e22be01f6b7",
       "reviewFlags": []
     },
     {
       "path": "docs/browser-plan/README_TR.md",
       "bytes": 968,
-      "sha256": "46ab446a6604b449f4fef8c0d36f9ceec5e86735762681d83cb8974a3aa61c44",
+      "sha256": "e95ada6f89dce4a87796638afcea58da861ece05a183fd346e403d9bf8877025",
       "reviewFlags": []
     },
     {
@@ -47,20 +47,20 @@
     },
     {
       "path": "docs/browser-plan/TEST.md",
-      "bytes": 1975,
-      "sha256": "0ed50f0daa134e4f428f42b4eb63b551861d2745a25e2ec3445dc87784c43692",
+      "bytes": 2319,
+      "sha256": "784ddff0096f4af99399ede493e03606719e2b9c8979af0b4dd9aa7cd7f4980e",
       "reviewFlags": []
     },
     {
       "path": "docs/CORE_DURUM_TR.md",
       "bytes": 2267,
-      "sha256": "ecc7006c11013facda310eedcd825306247bf146f8e78da5c9e132e94427962a",
+      "sha256": "4cdb0e41323b9c12ab9644dbe52ab7e0de9f63f1b2e8b235b55b6d03aeb2922a",
       "reviewFlags": []
     },
     {
       "path": "docs/GITHUB_DEVIR_TR.md",
       "bytes": 6818,
-      "sha256": "0de13590a18e92d380a292eb35bd418355ad117f59fe923671c9b8d1ea0ec802",
+      "sha256": "0da1aeed62021e15968d6456bdbc9dd51d74bd3f63fd08f3fee6ab347e5a7c16",
       "reviewFlags": []
     },
     {
@@ -172,6 +172,12 @@
       "reviewFlags": []
     },
     {
+      "path": "docs/validation/V1.0.14.1.md",
+      "bytes": 2181,
+      "sha256": "200f80c7022c46149535789b0e2a823914a092842d0542619bb4445da96c79ec",
+      "reviewFlags": []
+    },
+    {
       "path": "docs/WINDOWS_CALISTIR_TR.txt",
       "bytes": 1039,
       "sha256": "dc587f4cfbbf766353cbc710758e467b5fa7ca2406ec52ac084fff850c654add",
@@ -215,14 +221,14 @@
     },
     {
       "path": "README.md",
-      "bytes": 5981,
-      "sha256": "a6df49389d5480368e28fa63c1da4f1ba4d16e6d24cbfbc52b2d8ff9f2b89cfe",
+      "bytes": 6870,
+      "sha256": "2a17e709f48e5bb9a6c94cee7bc9f0ddb7975f621a5f3ff1b09fb355229f35c7",
       "reviewFlags": []
     },
     {
       "path": "scripts/build-github-inventory.mjs",
-      "bytes": 4848,
-      "sha256": "26e019cde9d2d872c8d84949f40d9470d06fe941ed0dff9b65fc053319e384f8",
+      "bytes": 4879,
+      "sha256": "d028bdc16d4bab455301cf992cd3c22f7f0f15a77389b01d59e17d309fb69a74",
       "reviewFlags": []
     },
     {
@@ -755,8 +761,8 @@
     },
     {
       "path": "src/main/browser/tab-manager.ts",
-      "bytes": 43676,
-      "sha256": "a25bb64b3dce0c5391d5f7839fc2ce6a2c59b81951899224a651eaffed6d5dfd",
+      "bytes": 44257,
+      "sha256": "48ef274f1a0ff27e73ab4a316afbefbb86e0a431d7688b47f6b9e98c6157b799",
       "reviewFlags": []
     },
     {
@@ -791,8 +797,8 @@
     },
     {
       "path": "src/renderer/dev/main.tsx",
-      "bytes": 22454,
-      "sha256": "c7fd1c3e4e106a285e6b99957ef3d7e400db6ed0f8eccf78940c728437d3fdf5",
+      "bytes": 22569,
+      "sha256": "b0a612e5ec0b9509d0d4d17c4583a7a6c8475890944d1330daa984c22f998eca",
       "reviewFlags": []
     },
     {
@@ -805,6 +811,132 @@
       "path": "src/renderer/index.html",
       "bytes": 576,
       "sha256": "7326046109b251a7f538d2a89c45c0d29aa1615f29a860b4094f5b2cef2ab000",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/newtab/NewTabPage.tsx",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/onboarding/CharacterForm.tsx",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/onboarding/OnboardingGate.tsx",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/onboarding/profileStore.ts",
+      "bytes": 692,
+      "sha256": "93bda21bf37ec01142c66124eb9cd5cdb04193668605f7e5ea29445f6d1f503b",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/onboarding/scoring.ts",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/theme/assets/creational_bg.png",
+      "bytes": 329074,
+      "sha256": "ed57b7ca77e434bdd49ff206f7e01c14147d43d6934ab44a0568ec1b26679d3c",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/theme/assets/creational_f.png",
+      "bytes": 37780,
+      "sha256": "f391660d90e0dc955d211bc405241401f6a825def40ae59c0563718de85d88e5",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/theme/assets/creational_h.png",
+      "bytes": 29089,
+      "sha256": "8e86c82841625238b0ca8b7e1b64f18d0ef93634a6d7c3598287fa38d49ea554",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/theme/assets/creational_w.png",
+      "bytes": 20935,
+      "sha256": "76df16647f6ad096bdea3a8c1bc3c6fe6e324d32abbd3264c6514cbcd673bb87",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/theme/assets/cyber_bg.png",
+      "bytes": 290399,
+      "sha256": "c8a5fd6d32d20c271535d53f58e1a939d0125debc8e847ea13073cf331e5abb2",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/theme/assets/cyber_f.png",
+      "bytes": 31165,
+      "sha256": "447c10e09a3792f82bd958a887afd54e09162fb405f9a5d2e2b4d97c0d1fed91",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/theme/assets/cyber_h.png",
+      "bytes": 29355,
+      "sha256": "10257c145635b63614dd39f45c06e44bd56d98e8251276a20e32d98b56782566",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/theme/assets/cyber_w.png",
+      "bytes": 15556,
+      "sha256": "3f3d5a76d097a5e808bd47f8a329986388d20ef28a0ff5498b4089301071a6ad",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/theme/assets/developer_bg.png",
+      "bytes": 172915,
+      "sha256": "c1a5eec5c083317167c5556ead277694a4ad26882363e35acf6ae9a8701a9108",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/theme/assets/developer_f.png",
+      "bytes": 29759,
+      "sha256": "11e89d2b4821ad80264fe268b0a1664ef8d51e5f5a5bed91319089608907868b",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/theme/assets/developer_h.png",
+      "bytes": 26109,
+      "sha256": "66a0bec83a2c96112964de4c5337ae62a43ce5864edf6b2a37acb88aa096a7c8",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/theme/assets/developer_w.png",
+      "bytes": 15170,
+      "sha256": "c35814f51d2c7c83fa150b55c540c9e4dcc5d22972fbe625d758ae62b14e0386",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/theme/ThemeProvider.tsx",
+      "bytes": 1589,
+      "sha256": "61c76256b746e143366e244b670d3393bcecb3b5186b90fe58ca281418fc6e17",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/theme/themes.ts",
+      "bytes": 819,
+      "sha256": "e84cd1479f7c72161d0f235068d3c0df4325551a74f1989a34bac684c33cf337",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/theme/tokens.css",
+      "bytes": 1168,
+      "sha256": "ab36bb7b456112818f405eae5360d09dea7b059b393fe90d05397ad4e715c84a",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/shared/character.ts",
+      "bytes": 236,
+      "sha256": "c81fc906bc6a62e0268c893893458b3fca13530f24afbf2d650b4866ef9cea4a",
       "reviewFlags": []
     },
     {
@@ -925,6 +1057,12 @@
       "path": "tests/electron/performance.spec.ts",
       "bytes": 20055,
       "sha256": "107e241f2402aca26fec5805095ea19b099c5840f6f2f3fcd6a13fda3882cccf",
+      "reviewFlags": []
+    },
+    {
+      "path": "tests/electron/popup-navigation.spec.ts",
+      "bytes": 7351,
+      "sha256": "36f802399bbcdbe2c7dd3bfa32f56a13f072cc602fc670dc80eb4dcc3e136aa9",
       "reviewFlags": []
     },
     {
@@ -1168,8 +1306,8 @@
       "reviewFlags": []
     }
   ],
-  "fileCount": 194,
-  "totalBytes": 10146822,
+  "fileCount": 217,
+  "totalBytes": 11190124,
   "reviewFlaggedFiles": 0,
   "excluded": [
     "node_modules/",

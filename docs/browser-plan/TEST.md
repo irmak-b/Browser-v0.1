@@ -29,6 +29,7 @@ npm run typecheck
 npm test
 npm run build
 node node_modules/@playwright/test/cli.js test tests/electron/compact-layout.spec.ts
+node node_modules/@playwright/test/cli.js test tests/electron/popup-navigation.spec.ts
 npm run test:packaged
 ```
 
@@ -39,3 +40,5 @@ Değişikliğin etkilediği senaryolar seçilir. Test fixture'ları gerçek hesa
 Unit başarısı GUI veya gerçek veri entegrasyonu yerine geçmez. Forced device scale testi gerçek Windows OS DPI kabulü değildir. Özel commit, çalışma kümesi, GPU cache ve heap aynı sayaç değildir. Sonuçlarda sürüm, komut, exit code ve çalıştırılmayan kapsam ayrı belirtilir.
 
 [V1.0.14.0 doğrulaması](../validation/V1.0.14.0.md).
+
+V1.0.14.1 popup kontrolü; farklı kaynaklı sonuç bağlantısı/redirect, Enter ile target=_blank GET formu, orta tuş, kullanıcı tıklamasındaki window.open ve otomatik/güvensiz/çoklu popup reddini kapsar. [Doğrulama](../validation/V1.0.14.1.md).

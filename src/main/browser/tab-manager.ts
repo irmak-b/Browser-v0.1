@@ -316,19 +316,26 @@ export class TabManager {
     wc.setAudioMuted(!!record.state.muted);
     wc.setWindowOpenHandler((details) => {
       let permitted = false;
+      const epoch = record.epoch, documentRevision = record.documentRevision;
       try {
         const url = siteUrl(details.url);
         permitted = this.live(record) && !record.closing && !this.closingAll && id === this.selectedId
           && Date.now() - record.gestureAt < 1500 && record.gestureAt > 0 && !details.postBody
-          && details.disposition !== 'other' && new URL(url).origin === new URL(wc.getURL()).origin;
+          && details.disposition !== 'other' && view.getVisible() && wc.isFocused()
+          && !this.window.isDestroyed() && this.window.isFocused() && this.window.isVisible()
+          && !this.window.isMinimized() && this.healthAllowed();
+        // Search results routinely cross origins. The native input ticket,
+        // not a same-origin restriction, limits this to one user-initiated tab.
+        // Keep using our owned, bridge-free view; never allow a child window.
         if (permitted) queueMicrotask(() => {
-          if (!this.live(record) || record.closing || this.closingAll) return;
-          try { this.open(url, details.disposition !== 'background-tab'); this.notice('Popup aynı kaynaktan kontrollü yeni sekmede açıldı.'); }
+          if (!this.live(record) || record.closing || this.closingAll || id !== this.selectedId
+            || record.view !== view || record.epoch !== epoch || record.documentRevision !== documentRevision) return;
+          try { this.open(url, details.disposition !== 'background-tab'); this.notice('Bağlantı kontrollü yeni sekmede açıldı.'); }
           catch { this.notice('Popup engellendi; sekme açılamadı.'); }
         });
       } catch { /* deny */ }
       record.gestureAt = 0;
-      if (!permitted && this.live(record)) this.notice('Popup engellendi. Yakın kullanıcı tıklaması, aynı kaynak ve HTTP(S) GET gerekir.');
+      if (!permitted && this.live(record)) this.notice('Popup engellendi. Etkin sayfada yakın kullanıcı etkileşimi ve HTTP(S) GET gerekir.');
       return { action: 'deny' };
     });
     const start = (details: Electron.Event<Electron.WebContentsDidStartNavigationEventParams>) => {
