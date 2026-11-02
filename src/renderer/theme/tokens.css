@@ -1,0 +1,28 @@
+:root[data-character='creational'] { --c-title-from: #f5c242; --c-title-to: #a97be8; --c-address: #d9aea4; }
+:root[data-character='cyber']      { --c-title-from: #4f9a45; --c-title-to: #bff560; --c-address: #9a9fb5; }
+:root[data-character='developer']  { --c-title-from: #1d2a4d; --c-title-to: #2f64b3; --c-address: #94b5a8; }
+
+:root[data-character] .tabs-row {
+  background: linear-gradient(90deg, var(--c-title-from), var(--c-title-to));
+}
+:root[data-character] .address { background: var(--c-address); }
+
+/* Yeni sekme: yalnız normal boş sekme; "yanıt vermiyor" uyarısı (role=alert) hariç */
+:root[data-character] .site-area .empty:not([role='alert']) {
+  position: relative;
+  background: var(--wallpaper) center / cover no-repeat;
+}
+:root[data-character] .site-area .empty:not([role='alert']) > :is(.empty-symbol, h1, p, button) {
+  display: none;
+}
+:root[data-character] .site-area .empty:not([role='alert'])::after {
+  content: '';
+  position: absolute;
+  right: 24px;
+  bottom: 16px;
+  width: 96px;
+  height: 128px;
+  background: var(--mascot) center / contain no-repeat;
+  image-rendering: pixelated;
+  pointer-events: none;
+}

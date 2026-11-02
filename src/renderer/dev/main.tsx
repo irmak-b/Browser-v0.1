@@ -2,6 +2,8 @@ import { StrictMode, useEffect, useRef, useState, type CSSProperties, type FormE
 import { createRoot } from 'react-dom/client';
 import { LAYOUT, newerSnapshot, type BrowserSnapshot, type CommandResult, type ResourceSnapshot } from '../../shared/contracts';
 import './style.css';
+import { ThemeProvider } from '../theme/ThemeProvider';
+import '../theme/tokens.css';
 
 function App() {
   const [state, setState] = useState<BrowserSnapshot | null>(null);
@@ -223,4 +225,4 @@ function App() {
     {infoOpen && <div className="modal-layer"><section role="dialog" aria-modal="true" aria-labelledby="info-title" onKeyDown={(event) => { if (event.key === 'Tab') event.preventDefault(); if (event.key === 'Escape') closeInfo(); }}><p className="eyebrow">GELİŞTİRME MODU</p><h2 id="info-title">A4 tarayıcı ve geliştirme geçmişi</h2><p>Geçmiş yalnız bellekte tutulur; gerçek giriş ve sunucu kaydı yoktur.</p><p>Panel açıkken native sayfalar gizlenir.</p><button autoFocus className="primary" onClick={closeInfo}>Sayfaya dön</button></section></div>}
   </div>;
 }
-createRoot(document.getElementById('root')!).render(<StrictMode><App /></StrictMode>);
+createRoot(document.getElementById('root')!).render(<StrictMode><ThemeProvider><App /></ThemeProvider></StrictMode>);
