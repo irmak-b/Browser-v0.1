@@ -35,8 +35,16 @@ export function popupIntentSource(input: PopupInput, destination: string): strin
         const form=element.form;
         if(!form)return tag==='button'||tag==='input'&&['button','submit','image'].includes(element.type);
         if(form.method.toLowerCase()!=='get')return false;
-        const action=new URL(element.getAttribute('formaction')||form.getAttribute('action')||location.href,document.baseURI);
         const method=element.getAttribute('formmethod');
+        if(method&&method.toLowerCase()!=='get')return false;
+        const declaredAction=element.getAttribute('formaction')??form.getAttribute('action');
+        // JS-managed search launchers can intentionally omit action and open
+        // another search origin, even before a query is entered. Do not infer
+        // the current page as their required destination. Admission still
+        // requires a native gesture and passes the independent ad/URL checks.
+        if(!declaredAction?.trim()&&form.getAttribute('role')==='search'
+          &&(tag==='input'&&element.type==='search'||tag==='button'&&['button','submit'].includes(element.type)))return true;
+        const action=new URL(declaredAction||location.href,document.baseURI);
         return (!method||method.toLowerCase()==='get')&&action.origin===destination.origin&&action.pathname===destination.pathname;
       }
     }

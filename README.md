@@ -2,7 +2,11 @@
 
 Electron, React ve TypeScript tabanlı masaüstü tarayıcı çekirdeği. Chromium sayfaları ayrı `WebContentsView` içinde çalışır.
 
-**Sürüm:** V1.0.15.1 · **Temel plan:** BrowserPlan V1.0.1.0
+**Sürüm:** V1.0.15.2 · **Temel plan:** BrowserPlan V1.0.1.0
+
+## V1.0.15.2 — Yahoo arama uyumluluğu
+
+JavaScript ile başka bir arama hizmetine geçen, `action` adresi belirtmeyen GET arama kontrolleri tanınır. Yahoo ana sayfasından sonuçlara geçiş taze oturumda popup izni vermeden doğrulandı. Native etkileşim, tek açılış, reklam hedefi ve yönlendirme denetimleri korunur; siteye genel popup izni verilmez. [Neden ve testler](docs/validation/V1.0.15.2.md).
 
 ## V1.0.15.1 — ilk yükleme uyumluluğu
 
@@ -100,7 +104,7 @@ Browser Core ve geçici DevShell çalışır. Geçmiş servisi bellekte tutulur.
 - [Mimari](docs/browser-plan/ARCH.md)
 - [UI–Core sözleşmesi](docs/browser-plan/SOZLESME.md)
 - [Geliştirme ve çalıştırma](README_TR.md)
-- [Test planı](docs/browser-plan/TEST.md) · [Sürüm doğrulaması](docs/validation/V1.0.15.1.md)
+- [Test planı](docs/browser-plan/TEST.md) · [Sürüm doğrulaması](docs/validation/V1.0.15.2.md)
 
 ## Teknik sınırlar
 

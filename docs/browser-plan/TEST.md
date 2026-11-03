@@ -46,3 +46,5 @@ V1.0.14.1 popup kontrolü; farklı kaynaklı sonuç bağlantısı/redirect, Ente
 V1.0.15.0 ayrıca bağlantıyla ilgisiz açılışı bekletme, bir kez açma, origin'e bağlı izin/iptal, reklam hedefi ve HTTP yönlendirmesi, eski karar reddi, sınırlı yoğun istek kaydı ve UI'a tam hedef taşımama senaryolarını kapsar. Renderer yanıt vermediğinde intent denetimi süre sınırında reddeder. [Doğrulama](../validation/V1.0.15.0.md).
 
 V1.0.15.1; ilk yüklemede yanıt vermeyen/değişen DOM, GET araması, gerçek script düğmeleri, küçük fare hareketi ve açık shadow-DOM denetimlerini kapsar. Olumsuz niyet ile yanıt alınamaması ayrılır; yeni uyumluluk yolu eski reklam/otomatik açılış korumalarıyla birlikte doğrulanır. [Doğrulama](../validation/V1.0.15.1.md).
+
+V1.0.15.2; action'sız role=search GET başlatıcısını, sorgusuz hizmet açılışını, Enter/düğme gönderimini ve bu formdaki reklam hedefi reddini kapsar. Açık farklı action, sıradan metin formu ve POST yöntemi kapsamı genişletmez. [Doğrulama](../validation/V1.0.15.2.md).

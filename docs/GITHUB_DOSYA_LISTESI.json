@@ -1,5 +1,5 @@
 {
-  "version": "V1.0.15.1",
+  "version": "V1.0.15.2",
   "method": "Explicit source allowlist; no Git index, remote, commit or push. Never reads excluded secret/profile/cache/tool files. Limited pattern scan of included text is not a comprehensive secret guarantee. Review flags contain category and file name only, never matching content.",
   "manifestSelf": "This JSON is intended for the repository too, but excludes its own hash to avoid a circular manifest.",
   "files": [
@@ -12,7 +12,7 @@
     {
       "path": "app-version.json",
       "bytes": 77,
-      "sha256": "2f25d790b3881a9dfec4ff07aa2b6a8395fe681d01d0c5ef13498b66e56dd892",
+      "sha256": "39e87f52e2332bfd09ca6d241c64609695e8819c6d2609ce51b85e75a88e78ac",
       "reviewFlags": []
     },
     {
@@ -30,13 +30,13 @@
     {
       "path": "docs/browser-plan/PLAN.md",
       "bytes": 2558,
-      "sha256": "618c670a2ccef419b95d5b0c76dcec2afc888f18e54756e5b1842c349c616ad7",
+      "sha256": "89bcfbfc4782182f2a610683540b3eb0e8167675be7c2c812d6c87afa5dab7b0",
       "reviewFlags": []
     },
     {
       "path": "docs/browser-plan/README_TR.md",
       "bytes": 968,
-      "sha256": "fbc42cfcfa660f81e755b2181ed623a6ec07c4ccc16a32ff34433ee9b5736698",
+      "sha256": "79d7d4fd4ce3e34d5e82b4379728e966f5ce9e8f4c00a62a08d2786b3b7f2863",
       "reviewFlags": []
     },
     {
@@ -47,20 +47,20 @@
     },
     {
       "path": "docs/browser-plan/TEST.md",
-      "bytes": 3032,
-      "sha256": "73e67d5fbe8704fc1ee80b2251dad570b5a713d3eeb312a11d2815b145861a9e",
+      "bytes": 3323,
+      "sha256": "fb9ab8e101fa6ee9de5267c03c23238f3364d306c850ad3638fbb8fa115556a8",
       "reviewFlags": []
     },
     {
       "path": "docs/CORE_DURUM_TR.md",
-      "bytes": 2575,
-      "sha256": "364b1f3733942ddfec6b8464a0e165a0ab65277a6738a88288fa2fdcf2ac20ce",
+      "bytes": 2651,
+      "sha256": "d81afae7df2fef788387aa378915c656133a0882345d38b709a1d0e889dffd72",
       "reviewFlags": []
     },
     {
       "path": "docs/GITHUB_DEVIR_TR.md",
       "bytes": 6818,
-      "sha256": "a82fdb1cf0198c84f5763cbf23614e912aa2cfbf295b9a6f008f21add9426960",
+      "sha256": "8ce1230ebcf9b521f2ba28e0457722ebda62c036cf7e91423e0a85f068a09eb2",
       "reviewFlags": []
     },
     {
@@ -190,6 +190,12 @@
       "reviewFlags": []
     },
     {
+      "path": "docs/validation/V1.0.15.2.md",
+      "bytes": 2254,
+      "sha256": "8275eb2027caf767432c0e092d780074a651942332201e62b8cd3d60787a7b6d",
+      "reviewFlags": []
+    },
+    {
       "path": "docs/WINDOWS_CALISTIR_TR.txt",
       "bytes": 1039,
       "sha256": "dc587f4cfbbf766353cbc710758e467b5fa7ca2406ec52ac084fff850c654add",
@@ -233,14 +239,14 @@
     },
     {
       "path": "README.md",
-      "bytes": 8187,
-      "sha256": "8f1186502e54240aa55eb298e4bc061704dc4569f9f49e78b8e909089d7e40b7",
+      "bytes": 8601,
+      "sha256": "a938046469dc4191a389c43d0e1e85b2120dcf193b777dbd1d37c548d00088be",
       "reviewFlags": []
     },
     {
       "path": "scripts/build-github-inventory.mjs",
-      "bytes": 4941,
-      "sha256": "518110a6916f2d0f78eaa460bee404a2af3d426bcfecf74f085146e4fa4b82a1",
+      "bytes": 4972,
+      "sha256": "d3787d9ee05dba364db0c905830b53285c6914d3a7fc016bd4255e83a7e7e7dd",
       "reviewFlags": []
     },
     {
@@ -731,8 +737,8 @@
     },
     {
       "path": "src/main/browser/popup-policy.ts",
-      "bytes": 3369,
-      "sha256": "ff96c4c861f08b119fc5e9e2161ff49ca9d72b5cbf4440b5a13c1ec4126b0f6a",
+      "bytes": 3986,
+      "sha256": "3c7bea38f10d157bfce05b82accafcccdd30bdb3e1da9bd91b68b66026ed4bcc",
       "reviewFlags": []
     },
     {
@@ -1079,8 +1085,8 @@
     },
     {
       "path": "tests/electron/popup-navigation.spec.ts",
-      "bytes": 17775,
-      "sha256": "aa2104b704170f9fa36dde41f717e09d952a8cf44fb564de32940377cb0022aa",
+      "bytes": 21078,
+      "sha256": "3f015a3dc24563040eda76f2036eaddcc2e58f5e9e6f11c340fa34143fbcd778",
       "reviewFlags": []
     },
     {
@@ -1330,8 +1336,8 @@
       "reviewFlags": []
     }
   ],
-  "fileCount": 221,
-  "totalBytes": 11301279,
+  "fileCount": 222,
+  "totalBytes": 11308265,
   "reviewFlaggedFiles": 0,
   "excluded": [
     "node_modules/",

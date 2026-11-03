@@ -1,6 +1,6 @@
 # Geliştirme planı
 
-BrowserPlan V1.0.1.0'ın A1–A5 aşamaları temel alınır. Mevcut uygulama V1.0.15.1'dır.
+BrowserPlan V1.0.1.0'ın A1–A5 aşamaları temel alınır. Mevcut uygulama V1.0.15.2'dır.
 
 ## A1 — Gerçek sayfa ve uygulama bağlantısı
 

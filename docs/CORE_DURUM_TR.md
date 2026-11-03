@@ -1,6 +1,6 @@
 # Özellikler ve eksikler
 
-**Uygulama:** V1.0.15.1
+**Uygulama:** V1.0.15.2
 
 | Alan | Mevcut kapsam |
 | --- | --- |
@@ -30,7 +30,7 @@
 
 ## Bilinen sınırlar
 
-V1.0.15.1'de Yandex ilk açılış araması doğrulandı. Yahoo aramasının yeni sekme açılışı ise hâlâ popup denetiminde bekletilip panelden izin gerektirebiliyor; uyumluluk düzeltmesi açık.
+Yandex ilk açılış araması V1.0.15.1'de doğrulandı. Yahoo'nun action'sız JavaScript arama başlatıcısı V1.0.15.2'de düzeltildi; taze oturumda canlı sonuçlara popup izni vermeden ulaşıldı. Bölgesel/oturum varyantları için ayrıca kullanıcı kontrolü gerekir.
 
 Bellek geçmişi uygulama kapanınca silinir. Geliştirme A/B ayrımı gerçek auth değildir. Tam OAuth/opener, bütün indirme türleri, kalıcı offline sync ve tam eklenti sistemi desteklenmez.
 

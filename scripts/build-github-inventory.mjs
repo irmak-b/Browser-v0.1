@@ -9,7 +9,7 @@ const roots=['src','tests','scripts','docs/third-party'];
 const rootFiles=['README.md','README_TR.md','.gitignore','package.json','package-lock.json','app-version.json','tsconfig.json','electron.vite.config.ts','playwright.config.ts','playwright.packaged.config.ts'];
 // Publish project documentation by explicit file name, never local session
 // journals, agent instructions, historical receipts or raw measurement reports.
-const projectDocs=['docs/GITHUB_DEVIR_TR.md','docs/CORE_DURUM_TR.md','docs/WINDOWS_CALISTIR_TR.txt','docs/validation/V1.0.14.0.md','docs/validation/V1.0.14.1.md','docs/validation/V1.0.15.0.md','docs/validation/V1.0.15.1.md',
+const projectDocs=['docs/GITHUB_DEVIR_TR.md','docs/CORE_DURUM_TR.md','docs/WINDOWS_CALISTIR_TR.txt','docs/validation/V1.0.14.0.md','docs/validation/V1.0.14.1.md','docs/validation/V1.0.15.0.md','docs/validation/V1.0.15.1.md','docs/validation/V1.0.15.2.md',
  'docs/browser-plan/README_TR.md','docs/browser-plan/PLAN.md','docs/browser-plan/ARCH.md',
  'docs/browser-plan/SOZLESME.md','docs/browser-plan/EKIP.md','docs/browser-plan/TEST.md'];
 const skip=new Set(['node_modules','out','artifacts','.cache','test-results','playwright-report','coverage','.git','.codex','.agents','.aws','.ssh','profiles','userData']);

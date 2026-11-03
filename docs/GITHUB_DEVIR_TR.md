@@ -1,6 +1,6 @@
 # Browser Core — modül ve kaynak rehberi
 
-**Uygulama:** V1.0.15.1 · **Başlangıç planı:** BrowserPlan V1.0.1.0
+**Uygulama:** V1.0.15.2 · **Başlangıç planı:** BrowserPlan V1.0.1.0
 
 Bu belge projenin parçalarını, genişletme noktalarını, değiştirilebilir bileşenleri ve kaynak deposunun kapsamını tanımlar.
 

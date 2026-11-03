@@ -66,6 +66,45 @@ test('Enter submits a cross-origin target blank GET search form', async () => {
   await expect.poll(async () => (await state()).tabs.some(t => t.url === cross('/second?q=browser') && t.status === 'ready')).toBe(true);
 });
 
+test('an actionless search control may launch its search service without a site permission',async()=>{
+  await script(`document.body.innerHTML='<form role="search"><input type="search" id="launcher" placeholder="Search the web"></form>';document.querySelector('form').onsubmit=e=>e.preventDefault();document.getElementById('launcher').onclick=()=>window.open(${JSON.stringify(cross('/second'))},'_blank');void 0`);
+  await click('#launcher');
+  await expect.poll(async()=>(await state()).tabs.length).toBe(2);
+  await expect.poll(async()=>(await state()).tabs.some(t=>t.url===cross('/second')&&t.status==='ready')).toBe(true);
+  expect((await state()).popups?.clickAllowed).toBe(false);
+});
+
+test('actionless search submission works with Enter and a submit button while ad destinations stay blocked',async()=>{
+  const original=(await state()).activeTabId!;
+  await script(`document.body.innerHTML='<form role="search"><input type="search" id="query"><button>Search</button></form>';document.querySelector('form').onsubmit=e=>{e.preventDefault();window.open(${JSON.stringify(cross('/second?q=browser'))},'_blank')};void 0`);
+  await click('#query');
+  await app.evaluate(({webContents},id)=>{const wc=webContents.fromId(id)!;wc.sendInputEvent({type:'keyDown',keyCode:'Return'});wc.sendInputEvent({type:'char',keyCode:'\r'});wc.sendInputEvent({type:'keyUp',keyCode:'Return'});},sourceId);
+  await expect.poll(async()=>(await state()).tabs.length).toBe(2);
+  await ui.evaluate(id=>window.browser.activateTab(id),original);
+  await click('button');
+  await expect.poll(async()=>(await state()).tabs.length).toBe(3);
+  await ui.evaluate(id=>window.browser.activateTab(id),original);
+  await script(`document.querySelector('form').onsubmit=e=>{e.preventDefault();window.open('https://popads.net/search?q=browser','_blank')};void 0`);
+  await click('button');
+  await expect.poll(async()=>(await state()).popups?.pending?.reason).toBe('advertising');
+  expect((await state()).tabs).toHaveLength(3);
+});
+
+test('a search role does not bypass an explicit different action or grant an ordinary text form',async()=>{
+  await script(`document.body.innerHTML='<form role="search"><input type="search" id="query"></form>';document.querySelector('form').action=${JSON.stringify(new URL('/second',fixture).href)};document.getElementById('query').onclick=()=>window.open(${JSON.stringify(cross('/second'))},'_blank');void 0`);
+  await click('#query');
+  await expect.poll(async()=>(await state()).popups?.pending?.reason).toBe('unrelated');
+  expect((await state()).tabs).toHaveLength(1);
+  await script(`document.body.innerHTML='<form><input type="text" id="query"></form>';document.getElementById('query').onclick=()=>window.open(${JSON.stringify(cross('/second'))},'_blank');void 0`);
+  await click('#query');
+  await expect.poll(async()=>(await state()).popups?.blockedCount).toBe(2);
+  expect((await state()).tabs).toHaveLength(1);
+  await script(`document.body.innerHTML='<form role="search" method="post"><input type="search" id="query"></form>';document.getElementById('query').onclick=()=>window.open(${JSON.stringify(cross('/second'))},'_blank');void 0`);
+  await click('#query');
+  await expect.poll(async()=>(await state()).popups?.blockedCount).toBe(3);
+  expect((await state()).tabs).toHaveLength(1);
+});
+
 test('middle click keeps the result in a background tab', async () => {
   const before = await state();
   await script(`document.body.innerHTML='<a id="result">Search result</a>';document.getElementById('result').href=${JSON.stringify(cross('/second'))};void 0`);
