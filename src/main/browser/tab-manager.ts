@@ -8,6 +8,7 @@ import { PageFreezer } from './page-freezer';
 import { RendererWatchdog, type HealthTarget } from './renderer-watchdog';
 import { PageContextMenu } from './page-context-menu';
 import { ClosedTabs } from './closed-tabs';
+import { inspectPopupIntent, isTabDisposition, POPUP_INPUT_MS, type PopupInput } from './popup-policy';
 
 interface TabRecord {
   view?: WebContentsView;
@@ -30,6 +31,11 @@ interface TabRecord {
   closing: boolean;
   cleanup: (() => void)[];
   gestureAt: number;
+  popupInput?: PopupInput;
+  popupCheckPending?: boolean;
+  popupSourceUrl?: string;
+  popupBlocked: number;
+  pendingPopup?: { requestId: string; url: string; reason: 'automatic' | 'unrelated' | 'advertising'; document: number; recoverable: boolean };
   retainedPage?: TabSnapshot;
   downloadUrl?: string;
   source: HistorySource;
@@ -41,6 +47,7 @@ export class TabManager {
   private readonly records = new Map<string, TabRecord>();
   private readonly closedIds = new Set<string>();
   private readonly closedTabs = new ClosedTabs();
+  private readonly popupClickOrigins = new Set<string>();
   private selectedId: string | null = null;
   private disposed = false;
   private closingAll = false;
@@ -68,6 +75,7 @@ export class TabManager {
     private readonly zoom: (wc: WebContents, direction: 'in' | 'out') => void = () => {},
     private readonly healthAllowed: () => boolean = () => true,
     private readonly cancelPage: (wc: WebContents) => void = () => {},
+    private readonly popupAd: (url: string, sourceUrl: string) => boolean = () => false,
   ) {
     this.contextMenu = new PageContextMenu(window, items => Menu.buildFromTemplate(items), text => clipboard.writeText(text));
     this.watchdog = new RendererWatchdog(() => this.healthTarget(), target => this.currentHealth(target),
@@ -108,6 +116,57 @@ export class TabManager {
   contents(id:string){return this.get(id).view?.webContents;}
   peekContents(id:string){const wc=this.records.get(id)?.view?.webContents;return wc&&!wc.isDestroyed()?wc:undefined;}
   snapshots() { return [...this.records.values()].map((record) => ({ ...record.state })); }
+  popupSnapshot() {
+    const record = this.records.get(this.selectedId ?? ''), wc = record?.view?.webContents;
+    if(!record || !wc || wc.isDestroyed() || !/^https?:/.test(wc.getURL()))return null;
+    const sourceOrigin = new URL(wc.getURL()).origin, pending = record.pendingPopup;
+    return { blockedCount: record.popupBlocked, sourceOrigin, clickAllowed: this.popupClickOrigins.has(sourceOrigin),
+      pending: pending ? { requestId: pending.requestId, targetOrigin: new URL(pending.url).origin, reason: pending.reason,
+        recoverable: pending.recoverable } : null };
+  }
+  private rejectPopup(record: TabRecord, url: string, reason: 'automatic' | 'unrelated' | 'advertising') {
+    if(!this.live(record) || record.closing || this.closingAll)return;
+    const previous = record.popupBlocked, hadPending=!!record.pendingPopup;
+    record.popupBlocked = Math.min(999, record.popupBlocked + 1);
+    // One bounded review ticket per source document, not a queue of sensitive URLs.
+    if(!record.pendingPopup)record.pendingPopup = { requestId: randomUUID(), url, reason, document: record.documentRevision, recoverable: reason!=='advertising' };
+    if(previous !== record.popupBlocked || !hadPending) {
+      this.notice(reason === 'advertising' ? 'Reklam popup hedefi engellendi.' : 'Popup engellendi. Bilgi panelinden hedefi inceleyebilirsiniz.');
+    }
+  }
+  private openPopup(record: TabRecord, url: string, foreground: boolean) {
+    const source = record.view!.webContents.getURL();
+    if(this.popupAd(url,source)){this.rejectPopup(record,url,'advertising');return;}
+    const opened=this.open(url,foreground);
+    this.records.get(opened.tabId)!.popupSourceUrl=source;
+    this.notice('Bağlantı kontrollü yeni sekmede açıldı.');
+  }
+  resolvePopup(id: string, requestId: string, action: 'open-once' | 'allow-site' | 'dismiss') {
+    const record=this.get(id), pending=record.pendingPopup, wc=record.view?.webContents;
+    if(id!==this.selectedId || !pending || pending.requestId!==requestId || !wc || wc.isDestroyed()
+      || pending.document!==record.documentRevision || record.closing || this.closingAll)
+      throw new BrowserFault('OPERATION_CANCELLED','Popup isteği artık geçerli değil.');
+    if(action==='dismiss'){record.pendingPopup=undefined;this.changed();return null;}
+    if(this.popupAd(pending.url,wc.getURL()))throw new BrowserFault('POLICY_BLOCKED','Bu hedef reklam filtresiyle engellendi. Önce site reklam tercihini kontrol edin.');
+    const origin=new URL(wc.getURL()).origin;
+    if(action==='allow-site'){
+      if(this.popupClickOrigins.size>=128 && !this.popupClickOrigins.has(origin))throw new BrowserFault('OPERATION_CANCELLED','Popup site tercihi sınırına ulaşıldı.');
+      this.popupClickOrigins.add(origin);
+    }
+    record.pendingPopup=undefined;
+    this.openPopup(record,pending.url,true);this.changed();return null;
+  }
+  resetPopupPermission(id:string){
+    const record=this.get(id),wc=record.view?.webContents;
+    if(id!==this.selectedId || !wc || wc.isDestroyed())throw new BrowserFault('OPERATION_CANCELLED','Etkin sayfa gerekli.');
+    this.popupClickOrigins.delete(new URL(wc.getURL()).origin);this.changed();return null;
+  }
+  refreshPopupPolicy(){
+    for(const record of this.records.values()){
+      const wc=record.view?.webContents,pending=record.pendingPopup;
+      if(wc&&!wc.isDestroyed()&&pending)pending.recoverable=!this.popupAd(pending.url,wc.getURL());
+    }
+  }
   entries() { return [...this.records.values()].flatMap((record) => record.view ? [{ view: record.view, state: record.state }] : []); }
   owns(wc: WebContents) { return !this.disposed && [...this.records.values()].some((record) => record.view?.webContents === wc && !record.closing && !wc.isDestroyed()); }
   hasRecentGesture(wc: WebContents) {
@@ -180,6 +239,7 @@ export class TabManager {
     this.contextMenu.close();
     if (record.view) this.fullscreen(record.view.webContents, false);
     record.gestureAt = 0;
+    record.popupInput=undefined;record.pendingPopup=undefined;record.popupBlocked=0;record.popupSourceUrl=undefined;
     if (!record.state.loading) record.retainedPage = { ...record.state };
     record.downloadUrl = undefined;
     record.epoch++;
@@ -292,7 +352,7 @@ export class TabManager {
     const id = randomUUID();
     const record: TabRecord = {
       idleSince: Date.now(), nextCheck: 0, interacted: false, resuming: false, reloadSafe: false, sleepBudgetBlocked: false,
-      epoch: 0, committedEpoch: -1, documentRevision: 0, expectedUrl: '', awaitingStart: false, closing: false, cleanup: [], gestureAt: 0,
+      epoch: 0, committedEpoch: -1, documentRevision: 0, expectedUrl: '', awaitingStart: false, closing: false, cleanup: [], gestureAt: 0, popupBlocked: 0,
       source: 'navigate', recordedEpoch: -1,
       state: { tabId: id, url: '', title: 'Yeni sekme', loading: false, audible: false, muted, canGoBack: false, canGoForward: false, status: 'empty', errorCode: null },
     };
@@ -315,27 +375,42 @@ export class TabManager {
     // Apply before the first navigation, including a muted sleeping tab's wake.
     wc.setAudioMuted(!!record.state.muted);
     wc.setWindowOpenHandler((details) => {
-      let permitted = false;
+      const input=record.popupInput;record.popupInput=undefined;
+      record.gestureAt=0;
       const epoch = record.epoch, documentRevision = record.documentRevision;
       try {
+        if(details.url.length>8192)throw new Error('Popup URL exceeds bounded storage');
         const url = siteUrl(details.url);
-        permitted = this.live(record) && !record.closing && !this.closingAll && id === this.selectedId
-          && Date.now() - record.gestureAt < 1500 && record.gestureAt > 0 && !details.postBody
-          && details.disposition !== 'other' && view.getVisible() && wc.isFocused()
+        const current=()=>this.live(record) && !record.closing && !this.closingAll && id===this.selectedId
+          && record.view===view && record.epoch===epoch && record.documentRevision===documentRevision
+          && view.getVisible() && !wc.isDestroyed();
+        const visible = current() && wc.isFocused()
           && !this.window.isDestroyed() && this.window.isFocused() && this.window.isVisible()
           && !this.window.isMinimized() && this.healthAllowed();
-        // Search results routinely cross origins. The native input ticket,
-        // not a same-origin restriction, limits this to one user-initiated tab.
-        // Keep using our owned, bridge-free view; never allow a child window.
-        if (permitted) queueMicrotask(() => {
-          if (!this.live(record) || record.closing || this.closingAll || id !== this.selectedId
-            || record.view !== view || record.epoch !== epoch || record.documentRevision !== documentRevision) return;
-          try { this.open(url, details.disposition !== 'background-tab'); this.notice('Bağlantı kontrollü yeni sekmede açıldı.'); }
-          catch { this.notice('Popup engellendi; sekme açılamadı.'); }
-        });
-      } catch { /* deny */ }
-      record.gestureAt = 0;
-      if (!permitted && this.live(record)) this.notice('Popup engellendi. Etkin sayfada yakın kullanıcı etkileşimi ve HTTP(S) GET gerekir.');
+        if(!visible || details.postBody || details.disposition==='other'){
+          if(this.live(record))this.notice('Popup engellendi. Etkin sayfa ve HTTP(S) GET gerekir.');
+          return {action:'deny'};
+        }
+        if(this.popupAd(url,wc.getURL())){this.rejectPopup(record,url,'advertising');return {action:'deny'};}
+        if(!input || Date.now()-input.at<0 || Date.now()-input.at>POPUP_INPUT_MS || record.popupCheckPending){
+          this.rejectPopup(record,url,'automatic');return {action:'deny'};
+        }
+        record.popupCheckPending=true;
+        const startupLoading=wc.isLoading();
+        // A loading page can replace the clicked form before an async probe.
+        // Admit one native tab request without that redundant startup read.
+        // On a settled document, a concrete negative still blocks; only an
+        // unavailable probe gets the same gesture-limited compatibility path.
+        const permitted=startupLoading&&isTabDisposition(details.disposition)||this.popupClickOrigins.has(new URL(wc.getURL()).origin)
+          ? Promise.resolve('allow' as const) : inspectPopupIntent(wc,input,url);
+        void permitted.then(intent=>{
+          if(!current() || !this.healthAllowed() || !this.window.isFocused() || !wc.isFocused())return;
+          const allowed=intent==='allow'||intent==='unavailable'&&isTabDisposition(details.disposition);
+          if(!allowed){this.rejectPopup(record,url,'unrelated');return;}
+          try{this.openPopup(record,url,details.disposition!=='background-tab');}
+          catch{this.notice('Popup engellendi; sekme açılamadı.');}
+        }).finally(()=>{record.popupCheckPending=false;}).catch(()=>{});
+      } catch { if(this.live(record))this.notice('Popup engellendi. Bu hedef desteklenmiyor.'); }
       return { action: 'deny' };
     });
     const start = (details: Electron.Event<Electron.WebContentsDidStartNavigationEventParams>) => {
@@ -349,7 +424,12 @@ export class TabManager {
       catch { details.preventDefault(); if (details.isMainFrame) this.fail(record, 'POLICY_BLOCKED'); }
     };
     const redirect = (details: Electron.Event<Electron.WebContentsWillRedirectEventParams>) => {
-      try { siteUrl(details.url); }
+      try {
+        siteUrl(details.url);
+        if(details.isMainFrame && record.popupSourceUrl && this.popupAd(details.url,record.popupSourceUrl)){
+          details.preventDefault();this.fail(record,'POPUP_AD_BLOCKED');this.notice('Yeni sekmenin reklam yönlendirmesi engellendi.');
+        }
+      }
       catch { details.preventDefault(); if (details.isMainFrame) this.fail(record, 'POLICY_BLOCKED'); }
     };
     const redirected = (details: Electron.Event<Electron.WebContentsDidRedirectNavigationEventParams>) => {
@@ -362,6 +442,7 @@ export class TabManager {
       if (!this.live(record) || record.awaitingStart || nextUrl !== record.expectedUrl) return;
       record.committedEpoch = record.epoch;
       record.documentRevision++;
+      record.pendingPopup=undefined;record.popupInput=undefined;record.popupSourceUrl=undefined;
       record.sleepBudgetBlocked = false;
       record.visitId = undefined;
       const oldDocumentWarning = record.state.errorCode === 'RENDER_PROCESS_UNRESPONSIVE';
@@ -450,12 +531,19 @@ export class TabManager {
       if (key.type === 'keyDown' && !event.defaultPrevented && !['Shift', 'Control', 'Alt', 'Meta', 'AltGraph'].includes(key.key)) {
         record.interacted = true;
         if (!key.isAutoRepeat && !key.control && !key.meta && !key.alt && key.key !== 'Escape' && id === this.selectedId) record.gestureAt = Date.now();
+        record.popupInput=!key.isAutoRepeat && !key.control && !key.meta && !key.alt && ['Enter','Return',' '].includes(key.key) && id===this.selectedId
+          ? {at:Date.now(),kind:'keyboard'} : undefined;
       }
       if (key.type === 'keyDown' && !key.isAutoRepeat && id === this.selectedId) this.watchdog.activity();
     };
     const mouse = (_event: Electron.Event, value: Electron.MouseInputEvent) => {
       if (value.type === 'mouseDown') record.interacted = true;
       if (value.type === 'mouseDown' && id === this.selectedId) record.gestureAt = Date.now();
+      if(value.type==='mouseWheel')record.popupInput=undefined;
+      if(value.type==='mouseMove' && record.popupInput?.kind==='mouse'
+        && Math.hypot(value.x-record.popupInput.x,value.y-record.popupInput.y)>8)record.popupInput=undefined;
+      if(value.type==='mouseDown')record.popupInput=id===this.selectedId && ['left','middle'].includes(value.button ?? '')
+        ? {at:Date.now(),kind:'mouse',x:value.x,y:value.y} : undefined;
       if ((value.type === 'mouseDown' || value.type === 'mouseWheel') && id === this.selectedId) this.watchdog.activity();
     };
     const enteredFullscreen = () => this.fullscreen(wc, true);
@@ -717,6 +805,7 @@ export class TabManager {
   }
   dispose() {
     this.disposed = true;
+    this.popupClickOrigins.clear();
     this.closedTabs.clear();
     this.contextMenu.dispose();
     this.watchdog.dispose(); for (const cleanup of this.healthCleanup) cleanup();

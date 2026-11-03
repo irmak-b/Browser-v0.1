@@ -1,6 +1,6 @@
 {
   "name": "browser-core",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "private": true,
   "description": "Browser Core Windows prototype with local ad blocking and background resource management",
   "main": "out/main/index.js",

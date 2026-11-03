@@ -8,7 +8,7 @@ export function registerBrowserIpc(window: BrowserWindow, controller: BrowserCon
   const handles = [CHANNEL.getState, CHANNEL.openTab, CHANNEL.navigate, CHANNEL.viewport,
     CHANNEL.activateTab, CHANNEL.closeTab, CHANNEL.goBack, CHANNEL.goForward, CHANNEL.reload, CHANNEL.stop,
     CHANNEL.switchIdentity, CHANNEL.theme, CHANNEL.approveDownload, CHANNEL.cancelDownload, CHANNEL.historyMode, CHANNEL.retryHistory, CHANNEL.keepAwake,CHANNEL.adBlocking,CHANNEL.resources,CHANNEL.exitFullscreen,CHANNEL.resetSitePermissions,
-    CHANNEL.openFind, CHANNEL.findInPage, CHANNEL.closeFind, CHANNEL.zoom, CHANNEL.forceCloseUnresponsive, CHANNEL.restoreClosedTab, CHANNEL.tabMuted];
+    CHANNEL.openFind, CHANNEL.findInPage, CHANNEL.closeFind, CHANNEL.zoom, CHANNEL.forceCloseUnresponsive, CHANNEL.restoreClosedTab, CHANNEL.tabMuted, CHANNEL.resolvePopup, CHANNEL.resetPopupPermission];
   function authorize(event: IpcMainInvokeEvent) {
     const frame = event.senderFrame;
     if (!frame || window.isDestroyed() || event.sender.isDestroyed()
@@ -38,6 +38,13 @@ export function registerBrowserIpc(window: BrowserWindow, controller: BrowserCon
   handle(CHANNEL.getState, (value) => {
     if (value !== undefined) throw new BrowserFault('INVALID_INPUT', 'Bu komut girdi almaz.');
     return controller.snapshot();
+  });
+  handle(CHANNEL.resolvePopup, value => {
+    const args = exactObject(value, ['tabId', 'requestId', 'action']);
+    if(typeof args.tabId !== 'string' || !args.tabId || args.tabId.length > 64
+      || typeof args.requestId !== 'string' || !args.requestId || args.requestId.length > 64
+      || !['open-once', 'allow-site', 'dismiss'].includes(args.action as string)) throw new BrowserFault('INVALID_INPUT', 'Popup kararı geçersiz.');
+    return controller.resolvePopup(args.tabId, args.requestId, args.action as 'open-once' | 'allow-site' | 'dismiss');
   });
   handle(CHANNEL.openTab, (value) => {
     const args = exactObject(value, ['input']);
@@ -120,6 +127,7 @@ export function registerBrowserIpc(window: BrowserWindow, controller: BrowserCon
     [CHANNEL.openFind, (id: string) => controller.openFind(id)],
     [CHANNEL.closeFind, (id: string) => controller.closeFind(id)],
     [CHANNEL.resetSitePermissions, (id: string) => controller.resetSitePermissions(id)],
+    [CHANNEL.resetPopupPermission, (id: string) => controller.resetPopupPermission(id)],
     [CHANNEL.forceCloseUnresponsive, (id: string) => controller.forceCloseUnresponsive(id)],
     [CHANNEL.activateTab, (id: string) => controller.activate(id)],
     [CHANNEL.closeTab, (id: string) => controller.close(id)],

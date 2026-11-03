@@ -9,6 +9,21 @@ test('ad host matching respects complete domain labels and never matches lookali
  for(const host of ['notdoubleclick.net','doubleclick.net.safe.example','example.com','googlevideo.com','googletagmanager.com',''])assert.equal(isAdHost(host),false);
  assert.ok(AD_DOMAINS.length<100);
 });
+
+test('popup destinations use network rules before admission and respect source site exceptions',()=>{
+ const wc={} as WebContents,filter=new AdBlocker(()=>{}),source='https://news.example/article';
+ filter.navigation(wc,source);
+ assert.equal(filter.blocksPopup('https://popads.net/ad',source),true);
+ assert.equal(filter.blocksPopup('https://example.com/',source),false);
+ assert.equal(filter.blocksPopup('https://www.google.com/search?q=browser',source),false);
+ // A bundled $popup-only rule is active for admission, not ordinary scripts.
+ assert.equal(filter.blocksPopup('https://trpartners.io/click',source),true);
+ assert.equal(filter.block(wc,'https://trpartners.io/click','script'),false);
+ filter.setEnabled(wc,false);
+ assert.equal(filter.blocksPopup('https://popads.net/ad',source),false);
+ assert.equal(filter.blocksPopup('https://popads.net/ad','https://other.example/'),true);
+ filter.dispose();
+});
 test('network filter preserves content and main documents, isolates counters and supports site exception',()=>{
  const a={} as WebContents,b={} as WebContents,filter=new AdBlocker(()=>{});
  filter.navigation(a,'https://news.example/article');filter.navigation(b,'https://other.example/');

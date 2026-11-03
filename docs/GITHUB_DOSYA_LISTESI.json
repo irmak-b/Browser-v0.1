@@ -1,5 +1,5 @@
 {
-  "version": "V1.0.14.1",
+  "version": "V1.0.15.1",
   "method": "Explicit source allowlist; no Git index, remote, commit or push. Never reads excluded secret/profile/cache/tool files. Limited pattern scan of included text is not a comprehensive secret guarantee. Review flags contain category and file name only, never matching content.",
   "manifestSelf": "This JSON is intended for the repository too, but excludes its own hash to avoid a circular manifest.",
   "files": [
@@ -12,7 +12,7 @@
     {
       "path": "app-version.json",
       "bytes": 77,
-      "sha256": "de297f9da0cb6d75548dedeb7c1791610477a70ef1b035df01fe303a46e0696c",
+      "sha256": "2f25d790b3881a9dfec4ff07aa2b6a8395fe681d01d0c5ef13498b66e56dd892",
       "reviewFlags": []
     },
     {
@@ -30,37 +30,37 @@
     {
       "path": "docs/browser-plan/PLAN.md",
       "bytes": 2558,
-      "sha256": "b79e24c44cda31c15b0cce0032a19ff7abfa568cfd9b9f7852186e22be01f6b7",
+      "sha256": "618c670a2ccef419b95d5b0c76dcec2afc888f18e54756e5b1842c349c616ad7",
       "reviewFlags": []
     },
     {
       "path": "docs/browser-plan/README_TR.md",
       "bytes": 968,
-      "sha256": "e95ada6f89dce4a87796638afcea58da861ece05a183fd346e403d9bf8877025",
+      "sha256": "fbc42cfcfa660f81e755b2181ed623a6ec07c4ccc16a32ff34433ee9b5736698",
       "reviewFlags": []
     },
     {
       "path": "docs/browser-plan/SOZLESME.md",
-      "bytes": 2933,
-      "sha256": "bf72de526bf277d6790ea6ec1688a218cec1cd1dec7d9308269e4c6e1b51690c",
+      "bytes": 3511,
+      "sha256": "ac838c5009278b82be80ba1be14c67aed65723f78055471262df2a64e9685c64",
       "reviewFlags": []
     },
     {
       "path": "docs/browser-plan/TEST.md",
-      "bytes": 2319,
-      "sha256": "784ddff0096f4af99399ede493e03606719e2b9c8979af0b4dd9aa7cd7f4980e",
+      "bytes": 3032,
+      "sha256": "73e67d5fbe8704fc1ee80b2251dad570b5a713d3eeb312a11d2815b145861a9e",
       "reviewFlags": []
     },
     {
       "path": "docs/CORE_DURUM_TR.md",
-      "bytes": 2267,
-      "sha256": "4cdb0e41323b9c12ab9644dbe52ab7e0de9f63f1b2e8b235b55b6d03aeb2922a",
+      "bytes": 2575,
+      "sha256": "364b1f3733942ddfec6b8464a0e165a0ab65277a6738a88288fa2fdcf2ac20ce",
       "reviewFlags": []
     },
     {
       "path": "docs/GITHUB_DEVIR_TR.md",
       "bytes": 6818,
-      "sha256": "0da1aeed62021e15968d6456bdbc9dd51d74bd3f63fd08f3fee6ab347e5a7c16",
+      "sha256": "a82fdb1cf0198c84f5763cbf23614e912aa2cfbf295b9a6f008f21add9426960",
       "reviewFlags": []
     },
     {
@@ -178,6 +178,18 @@
       "reviewFlags": []
     },
     {
+      "path": "docs/validation/V1.0.15.0.md",
+      "bytes": 4249,
+      "sha256": "cd669e82146f9a415b4de4f2f9ad54aa53566e84423e5b9a997e5844c91e9e7b",
+      "reviewFlags": []
+    },
+    {
+      "path": "docs/validation/V1.0.15.1.md",
+      "bytes": 2666,
+      "sha256": "4b70f595a5288697f6daef1fa7a7034bd93b484490d1deee78f01c271022f96a",
+      "reviewFlags": []
+    },
+    {
       "path": "docs/WINDOWS_CALISTIR_TR.txt",
       "bytes": 1039,
       "sha256": "dc587f4cfbbf766353cbc710758e467b5fa7ca2406ec52ac084fff850c654add",
@@ -192,13 +204,13 @@
     {
       "path": "package-lock.json",
       "bytes": 88425,
-      "sha256": "05400ada7faecdd59f45580d3743d9a7ba89655d3870166d61dc922ad4d819c3",
+      "sha256": "162a590fcdb6e8e3e205abe00cf4450596cd13579a3cb72c7c3ca789fd10c552",
       "reviewFlags": []
     },
     {
       "path": "package.json",
       "bytes": 1465,
-      "sha256": "6e759703c4982668936edfa0ab3265eac6bee2d4eb38bf123344beb9293af625",
+      "sha256": "f0e669e055d5751b39ef960317a9ce356d1a90562b852e391ded52c49ffcbb34",
       "reviewFlags": []
     },
     {
@@ -221,14 +233,14 @@
     },
     {
       "path": "README.md",
-      "bytes": 6870,
-      "sha256": "2a17e709f48e5bb9a6c94cee7bc9f0ddb7975f621a5f3ff1b09fb355229f35c7",
+      "bytes": 8187,
+      "sha256": "8f1186502e54240aa55eb298e4bc061704dc4569f9f49e78b8e909089d7e40b7",
       "reviewFlags": []
     },
     {
       "path": "scripts/build-github-inventory.mjs",
-      "bytes": 4879,
-      "sha256": "d028bdc16d4bab455301cf992cd3c22f7f0f15a77389b01d59e17d309fb69a74",
+      "bytes": 4941,
+      "sha256": "518110a6916f2d0f78eaa460bee404a2af3d426bcfecf74f085146e4fa4b82a1",
       "reviewFlags": []
     },
     {
@@ -257,8 +269,8 @@
     },
     {
       "path": "scripts/compile-ad-filters.mjs",
-      "bytes": 2738,
-      "sha256": "4023f7746fc8b465dcfef0747183560781f571ac365d753da162647685086361",
+      "bytes": 3557,
+      "sha256": "e72ac16634185ece2d300eea826246d822932ce053750eae192c5d29bd22d8bc",
       "reviewFlags": []
     },
     {
@@ -485,8 +497,8 @@
     },
     {
       "path": "src/main/browser/ad-blocker.ts",
-      "bytes": 8513,
-      "sha256": "9e87b06fdbc5cafaabef8876bcc6aa92eac153b000f05baea87d7bee29802d10",
+      "bytes": 8849,
+      "sha256": "8145220246c1cac4189a41adc64cb104df04a60788ae861668fd3367f6f25304",
       "reviewFlags": []
     },
     {
@@ -509,8 +521,8 @@
     },
     {
       "path": "src/main/browser/controller.ts",
-      "bytes": 23560,
-      "sha256": "473a10e4e7318de69fb30999a5adabdee5dd0a18670538e71b58735988a65f15",
+      "bytes": 23976,
+      "sha256": "30dca47bf1921bab515d97164e83223e9cb09c3b96ca7da4b8a782b1fedd9f7b",
       "reviewFlags": []
     },
     {
@@ -617,14 +629,14 @@
     },
     {
       "path": "src/main/browser/filter-data/engine.bin",
-      "bytes": 3991029,
-      "sha256": "604e6c43db69993b3a23fe04e1dfdcb6d27bbef7442b3fa2c30f5ab4f65a257f",
+      "bytes": 4064413,
+      "sha256": "ddeffcd79280f9301840625115bd6f5082d5c242def962515946131b62327fda",
       "reviewFlags": []
     },
     {
       "path": "src/main/browser/filter-data/engine.json",
-      "bytes": 233,
-      "sha256": "6724bb795725670395f5ac7603f810d7580a2f0c1f85aa6b2b72a2a47fb1c43a",
+      "bytes": 260,
+      "sha256": "65d2f42d89c0e2c1f3ebde385094c04de0f2d55326f79f28bd993eef96715a7b",
       "reviewFlags": []
     },
     {
@@ -635,8 +647,8 @@
     },
     {
       "path": "src/main/browser/fixture.ts",
-      "bytes": 6679,
-      "sha256": "8e7aa6d02a4c9c722383876466b36d8a7db2885d73ed98a2b2b49eb84f17bf8c",
+      "bytes": 6826,
+      "sha256": "bcb762ffd95c48e5835e8e8db174a4c9a8abfb5e0e8c04650aad5f10d7db5efd",
       "reviewFlags": []
     },
     {
@@ -718,6 +730,12 @@
       "reviewFlags": []
     },
     {
+      "path": "src/main/browser/popup-policy.ts",
+      "bytes": 3369,
+      "sha256": "ff96c4c861f08b119fc5e9e2161ff49ca9d72b5cbf4440b5a13c1ec4126b0f6a",
+      "reviewFlags": []
+    },
+    {
       "path": "src/main/browser/preferences.ts",
       "bytes": 189,
       "sha256": "689d2f15b172dd54df477569327eca6b3cee3e112f91673be8479eca0baeacc6",
@@ -761,8 +779,8 @@
     },
     {
       "path": "src/main/browser/tab-manager.ts",
-      "bytes": 44257,
-      "sha256": "48ef274f1a0ff27e73ab4a316afbefbb86e0a431d7688b47f6b9e98c6157b799",
+      "bytes": 50442,
+      "sha256": "d45535a307e58812f3e12b946fdd4272d64ea6e0834377db05f972b05aa10c61",
       "reviewFlags": []
     },
     {
@@ -773,8 +791,8 @@
     },
     {
       "path": "src/main/ipc.ts",
-      "bytes": 8159,
-      "sha256": "8c67cd2c5f5f5c2847875899296a333786d8f3382c61a4d51353a37c577e3cd2",
+      "bytes": 8861,
+      "sha256": "c713429c7d77163e3067e98039d950d6cd223a22c2c032148724e3117d946e25",
       "reviewFlags": []
     },
     {
@@ -785,8 +803,8 @@
     },
     {
       "path": "src/preload/index.ts",
-      "bytes": 3983,
-      "sha256": "475ab08dd41635a234372ff80830bdd02b4c47ecf0b3f3fa6fd61ab9083b15cb",
+      "bytes": 4261,
+      "sha256": "a9f7dbb271328715d853b13174cb753eeb9ef4dcd6375717bb08c85a359e9fd1",
       "reviewFlags": []
     },
     {
@@ -797,8 +815,8 @@
     },
     {
       "path": "src/renderer/dev/main.tsx",
-      "bytes": 22569,
-      "sha256": "b0a612e5ec0b9509d0d4d17c4583a7a6c8475890944d1330daa984c22f998eca",
+      "bytes": 24765,
+      "sha256": "7d4d3be1a6ff2863d1574be4151817bff36769ddd78b3dc9d7a765c28d3cb351",
       "reviewFlags": []
     },
     {
@@ -941,8 +959,8 @@
     },
     {
       "path": "src/shared/contracts.ts",
-      "bytes": 9650,
-      "sha256": "48d3a845ac0d542a235527cb6d17604726c78042014024dff8fe99b209e69b86",
+      "bytes": 10173,
+      "sha256": "e5cfbd0068cd6922348c1f5bec508c0cd2945383c3f8a88f5b1e9e14403d9331",
       "reviewFlags": []
     },
     {
@@ -1061,8 +1079,8 @@
     },
     {
       "path": "tests/electron/popup-navigation.spec.ts",
-      "bytes": 7351,
-      "sha256": "36f802399bbcdbe2c7dd3bfa32f56a13f072cc602fc670dc80eb4dcc3e136aa9",
+      "bytes": 17775,
+      "sha256": "aa2104b704170f9fa36dde41f717e09d952a8cf44fb564de32940377cb0022aa",
       "reviewFlags": []
     },
     {
@@ -1181,8 +1199,8 @@
     },
     {
       "path": "tests/unit/ad-blocker.test.ts",
-      "bytes": 4041,
-      "sha256": "954d0ba0af2891f1c47cd169e5ef796bc08294b6a22bc463b385e4bd42bf568d",
+      "bytes": 4956,
+      "sha256": "fda4e652b61d81e58773db5f8650676c8ca681509ae51db6c6814f727bf4b9b1",
       "reviewFlags": []
     },
     {
@@ -1252,6 +1270,12 @@
       "reviewFlags": []
     },
     {
+      "path": "tests/unit/popup-policy.test.ts",
+      "bytes": 1541,
+      "sha256": "0c2bd09061e7091ed4d8d8b9bfa7d6ccde471cd93fc2db20e7f756d6fd4d5387",
+      "reviewFlags": []
+    },
+    {
       "path": "tests/unit/preload.test.ts",
       "bytes": 3059,
       "sha256": "bb084b3503d3d9b3a38989ccadc7a74a7d494690be64471de222280849a7b467",
@@ -1306,8 +1330,8 @@
       "reviewFlags": []
     }
   ],
-  "fileCount": 217,
-  "totalBytes": 11190124,
+  "fileCount": 221,
+  "totalBytes": 11301279,
   "reviewFlaggedFiles": 0,
   "excluded": [
     "node_modules/",

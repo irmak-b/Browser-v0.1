@@ -1,6 +1,6 @@
 # BrowserPlan — proje belgeleri
 
-BrowserPlan V1.0.1.0, Electron Browser Core için A1–A5 geliştirme kapsamını tanımlar. Uygulama sürümü ayrı olarak V1.0.14.1'dır.
+BrowserPlan V1.0.1.0, Electron Browser Core için A1–A5 geliştirme kapsamını tanımlar. Uygulama sürümü ayrı olarak V1.0.15.1'dır.
 
 ## Teknik yön
 

@@ -3,6 +3,8 @@ export const CHANNEL = {
   openTab: 'browser:open-tab',
   restoreClosedTab: 'browser:restore-closed-tab',
   tabMuted: 'browser:tab-muted',
+  resolvePopup: 'browser:resolve-popup',
+  resetPopupPermission: 'browser:reset-popup-permission',
   navigate: 'browser:navigate',
   activateTab: 'browser:activate-tab',
   closeTab: 'browser:close-tab',
@@ -88,6 +90,8 @@ export interface TabSnapshot {
   errorCode: string | null;
 }
 export interface BrowserSnapshot {
+  popups?: { blockedCount: number; sourceOrigin: string; clickAllowed: boolean;
+    pending: { requestId: string; targetOrigin: string; reason: 'automatic' | 'unrelated' | 'advertising'; recoverable: boolean } | null } | null;
   canRestoreClosedTab?: boolean;
   find?: FindSnapshot | null;
   zoomFactor?: number;
@@ -121,6 +125,8 @@ export interface ViewportRequest {
 }
 export interface Bounds { x: number; y: number; width: number; height: number }
 export interface BrowserApi {
+  resolvePopup(tabId: string, requestId: string, action: 'open-once' | 'allow-site' | 'dismiss'): Promise<CommandResult<null>>;
+  resetPopupPermission(tabId: string): Promise<CommandResult<null>>;
   setTabMuted(tabId: string, muted: boolean): Promise<CommandResult<null>>;
   forceCloseUnresponsive(tabId: string): Promise<CommandResult<{ closed: boolean }>>;
   openFind(tabId: string): Promise<CommandResult<null>>;

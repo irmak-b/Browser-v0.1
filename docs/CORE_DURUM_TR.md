@@ -1,6 +1,6 @@
 # Özellikler ve eksikler
 
-**Uygulama:** V1.0.14.1
+**Uygulama:** V1.0.15.1
 
 | Alan | Mevcut kapsam |
 | --- | --- |
@@ -10,7 +10,8 @@
 | Sayfa araçları | Arama, eşleşmeler, yakınlaştırma ve sağ tık menüsü |
 | Video | Native tam ekran, kısa Esc bildirimi ve çıkış |
 | İzinler | Desteklenen ana HTTPS sayfaları için kamera/mikrofon/konum/bildirim kararı |
-| Popup ve indirme | Kontrollü yeni sekme; bilinen boyutlu GET, boyut onayı, hedef, ilerleme ve iptal |
+| Popup | Reklam hedefi/yönlendirme ve bağlantı niyeti denetimi; tek inceleme isteği, bir kez açma, oturumluk origin izni/iptal |
+| İndirme | Bilinen boyutlu GET, boyut onayı, hedef, ilerleme ve iptal |
 | Reklam filtresi | Ağ/CSS/scriptlet ve site tercihi; bütün reklamlara karşı garanti yok |
 | Kaynak yönetimi | Hafif boş sekmeler, korumalı uyutma/dondurma, cache ve kapanış temizliği |
 | Hata yönetimi | İptal/geç olay koruması, çöküş ve uzun donma uyarısı/toparlanma |
@@ -28,6 +29,8 @@
 - Kontrollü ön plan video CPU/RAM karşılaştırması.
 
 ## Bilinen sınırlar
+
+V1.0.15.1'de Yandex ilk açılış araması doğrulandı. Yahoo aramasının yeni sekme açılışı ise hâlâ popup denetiminde bekletilip panelden izin gerektirebiliyor; uyumluluk düzeltmesi açık.
 
 Bellek geçmişi uygulama kapanınca silinir. Geliştirme A/B ayrımı gerçek auth değildir. Tam OAuth/opener, bütün indirme türleri, kalıcı offline sync ve tam eklenti sistemi desteklenmez.
 

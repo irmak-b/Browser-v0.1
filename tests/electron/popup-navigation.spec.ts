@@ -74,9 +74,14 @@ test('middle click keeps the result in a background tab', async () => {
   expect((await state()).activeTabId).toBe(before.activeTabId);
 });
 
-test('a real button click may open a cross-origin scripted result', async () => {
-  await script(`document.body.innerHTML='<button id="result">Search</button>';document.getElementById('result').onclick=()=>{window.open(${JSON.stringify(cross('/second'))},'_blank')};void 0`);
+test('unrelated blank-area popup is held and can be opened once from trusted UI', async () => {
+  await script(`document.body.innerHTML='<div id="result">Ordinary page area</div>';document.getElementById('result').onclick=()=>{window.open(${JSON.stringify(cross('/second'))},'_blank')};void 0`);
   await click('#result');
+  await expect.poll(async () => (await state()).popups?.pending?.reason).toBe('unrelated');
+  expect((await state()).tabs).toHaveLength(1);
+  await ui.getByRole('button',{name:'Popup ayarları',exact:true}).click();
+  await expect(ui.getByTestId('blocked-popup')).toContainText('localhost');
+  await ui.getByRole('button',{name:'Bir kez aç',exact:true}).click();
   await expect.poll(async () => (await state()).tabs.some(t => t.url === cross('/second') && t.status === 'ready')).toBe(true);
   expect((await state()).tabs).toHaveLength(2);
 });
@@ -85,10 +90,12 @@ test('automatic popups, unsafe schemes and a second popup per gesture remain blo
   await script(`window.open(${JSON.stringify(cross('/second'))});void 0`);
   await expect.poll(async () => (await state()).notice).toContain('Popup engellendi');
   expect((await state()).tabs).toHaveLength(1);
-  await script(`document.body.innerHTML='<button id="burst">Open</button>';document.getElementById('burst').onclick=()=>{window.open(${JSON.stringify(cross('/second'))});window.open(${JSON.stringify(cross('/popup'))})};void 0`);
+  await script(`document.body.innerHTML='<a id="burst" href=${JSON.stringify(cross('/second'))}>Open</a>';document.getElementById('burst').onclick=e=>{e.preventDefault();window.open(${JSON.stringify(cross('/second'))});window.open(${JSON.stringify(cross('/popup'))})};void 0`);
   await click('#burst');
   await expect.poll(async () => (await state()).tabs.length).toBe(2);
-  await expect.poll(async () => (await state()).notice).toContain('Popup');
+  const sourceAfterBurst=(await state()).tabs[0]!.tabId;
+  await ui.evaluate(id=>window.browser.activateTab(id),sourceAfterBurst);
+  await expect.poll(async () => (await state()).popups?.blockedCount).toBeGreaterThanOrEqual(2);
   await script(`window.open('app://browser/index.html');window.open('file:///C:/popup-test');void 0`);
   expect((await state()).tabs).toHaveLength(2);
   const original = (await state()).tabs[0]!.tabId;
@@ -102,4 +109,122 @@ test('automatic popups, unsafe schemes and a second popup per gesture remain blo
   await expect.poll(async () => (await state()).notice).toContain('Popup engellendi');
   expect((await state()).tabs).toHaveLength(2);
   expect(await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows().length)).toBe(1);
+});
+
+test('ad popup targets are blocked before view creation and on HTTP redirect', async () => {
+  const target='https://popads.net/core-popup-test';
+  await script(`document.body.innerHTML='<a id="result" target="_blank">Ad target</a>';document.getElementById('result').href=${JSON.stringify(target)};void 0`);
+  await click('#result');
+  await expect.poll(async () => (await state()).popups?.pending?.reason).toBe('advertising');
+  expect((await state()).tabs).toHaveLength(1);
+  expect(await app.evaluate(({webContents})=>webContents.getAllWebContents().length)).toBe(2);
+  const s=await state();
+  const denied=await ui.evaluate(({id,requestId})=>window.browser.resolvePopup(id,requestId,'open-once'),{id:s.activeTabId!,requestId:s.popups!.pending!.requestId});
+  expect(denied).toMatchObject({ok:false,errorCode:'POLICY_BLOCKED'});
+  await script(`document.getElementById('result').href=${JSON.stringify(new URL('/popup-ad-redirect',fixture).href)};void 0`);
+  await click('#result');
+  await expect.poll(async () => (await state()).tabs.length).toBe(2);
+  await expect.poll(async () => (await state()).tabs.some(t=>t.errorCode==='POPUP_AD_BLOCKED')).toBe(true);
+  expect(await app.evaluate(({webContents})=>webContents.getAllWebContents().some(w=>w.getURL().startsWith('https://popads.net/')))).toBe(false);
+});
+
+test('site click permission is scoped, revocable and cannot replay stale requests', async () => {
+  const original=(await state()).activeTabId!;
+  await script(`document.body.innerHTML='<div id="result">Ordinary area</div>';document.getElementById('result').onclick=()=>window.open(${JSON.stringify(cross('/second'))});void 0`);
+  await click('#result');
+  await expect.poll(async () => (await state()).popups?.pending?.reason).toBe('unrelated');
+  const requestId=(await state()).popups!.pending!.requestId;
+  await ui.getByRole('button',{name:'Popup ayarları',exact:true}).click();
+  await ui.getByRole('button',{name:'Bu sitede tıklamayla açılışa izin ver',exact:true}).click();
+  await expect.poll(async () => (await state()).tabs.length).toBe(2);
+  await expect.poll(async () => (await state()).popups?.clickAllowed).toBe(false); // localhost differs from 127.0.0.1
+  await ui.evaluate(id=>window.browser.activateTab(id),original);
+  await expect.poll(async () => (await state()).popups?.clickAllowed).toBe(true);
+  expect(await ui.evaluate(({id,requestId})=>window.browser.resolvePopup(id,requestId,'open-once'),{id:original,requestId})).toMatchObject({ok:false,errorCode:'OPERATION_CANCELLED'});
+  await click('#result');
+  await expect.poll(async () => (await state()).tabs.length).toBe(3);
+  await ui.evaluate(id=>window.browser.activateTab(id),original);
+  await ui.getByRole('button',{name:'Site popup iznini kaldır',exact:true}).click();
+  await click('#result');
+  await expect.poll(async () => (await state()).popups?.pending?.reason).toBe('unrelated');
+  expect((await state()).tabs).toHaveLength(3);
+  const stale=(await state()).popups!.pending!.requestId;
+  await ui.evaluate(async id=>{const s=await window.browser.getState();if(s.ok)await window.browser.navigate(id,new URL('/second',s.data.fixtureUrl).href);},original);
+  expect(await ui.evaluate(({id,requestId})=>window.browser.resolvePopup(id,requestId,'allow-site'),{id:original,requestId:stale})).toMatchObject({ok:false,errorCode:'OPERATION_CANCELLED'});
+});
+
+test('startup direct links and GET forms work even when the DOM probe cannot answer', async()=>{
+  await app.evaluate(({webContents},id)=>{webContents.fromId(id)!.executeJavaScriptInIsolatedWorld=()=>Promise.reject(Error('Busy startup document'));},sourceId);
+  const original=(await state()).activeTabId!;
+  await script(`document.body.innerHTML='<a id="result" target="_blank">Result</a>';document.getElementById('result').href=${JSON.stringify(cross('/second'))};void 0`);
+  await click('#result');
+  await expect.poll(async()=>(await state()).tabs.length).toBe(2);
+  await ui.evaluate(id=>window.browser.activateTab(id),original);
+  await script(`document.body.innerHTML='<form target="_blank" method="get"><input name="q" value="browser"><button>Search</button></form>';document.querySelector('form').action=${JSON.stringify(cross('/second'))};void 0`);
+  await click('input');
+  await app.evaluate(({webContents},id)=>{const wc=webContents.fromId(id)!;wc.sendInputEvent({type:'keyDown',keyCode:'Return'});wc.sendInputEvent({type:'char',keyCode:'\r'});wc.sendInputEvent({type:'keyUp',keyCode:'Return'});},sourceId);
+  await expect.poll(async()=>(await state()).tabs.length).toBe(3);
+  await ui.evaluate(id=>window.browser.activateTab(id),original);
+  await app.evaluate(({webContents},id)=>{
+    const wc=webContents.fromId(id)!;
+    // During a real startup re-render, the clicked form can disappear before
+    // the asynchronous probe. Loading is a distinct compatibility condition.
+    wc.executeJavaScriptInIsolatedWorld=()=>Promise.resolve(false);wc.isLoading=()=>true;
+  },sourceId);
+  await click('input');
+  await app.evaluate(({webContents},id)=>{const wc=webContents.fromId(id)!;wc.sendInputEvent({type:'keyDown',keyCode:'Return'});wc.sendInputEvent({type:'char',keyCode:'\r'});wc.sendInputEvent({type:'keyUp',keyCode:'Return'});},sourceId);
+  await expect.poll(async()=>(await state()).tabs.length).toBe(4);
+});
+
+test('real script buttons tolerate a small pointer movement and shadow DOM controls',async()=>{
+  const original=(await state()).activeTabId!;
+  await script(`document.body.innerHTML='<button id="result" style="width:250px;height:80px">Open result</button>';document.getElementById('result').onclick=()=>window.open(${JSON.stringify(cross('/second'))});void 0`);
+  await app.evaluate(async({webContents,BrowserWindow},id)=>{
+    const wc=webContents.fromId(id)!;const p=await wc.executeJavaScript(`(()=>{const r=document.querySelector('button').getBoundingClientRect();return{x:Math.round(r.x+r.width/2),y:Math.round(r.y+r.height/2)}})()`);
+    BrowserWindow.getAllWindows()[0]!.focus();wc.focus();wc.sendInputEvent({type:'mouseDown',button:'left',clickCount:1,...p});
+    wc.sendInputEvent({type:'mouseMove',modifiers:['leftbuttondown'],x:p.x+2,y:p.y+1});wc.sendInputEvent({type:'mouseUp',button:'left',clickCount:1,x:p.x+2,y:p.y+1});
+  },sourceId);
+  await expect.poll(async()=>(await state()).tabs.length).toBe(2);
+  await ui.evaluate(id=>window.browser.activateTab(id),original);
+  await script(`document.body.innerHTML='<div id="host" style="width:200px;height:80px"></div>';const root=document.getElementById('host').attachShadow({mode:'open'});root.innerHTML='<span role="button" tabindex="0" style="display:block;width:200px;height:80px">Open</span>';root.querySelector('span').onclick=()=>window.open(${JSON.stringify(cross('/popup'))});void 0`);
+  await click('#host');
+  await expect.poll(async()=>(await state()).tabs.length).toBe(3);
+});
+
+test('typing, hover, delayed timers and background pages cannot borrow a generic gesture', async () => {
+  await script(`document.body.innerHTML='<input id="typing"><div id="blank">Ordinary page area</div>';document.getElementById('blank').onclick=()=>setTimeout(()=>window.open(${JSON.stringify(cross('/second'))}),10);void 0`);
+  await click('#blank');
+  await expect.poll(async () => (await state()).popups?.blockedCount).toBe(1);
+  expect((await state()).tabs).toHaveLength(1);
+  await click('#typing');
+  await app.evaluate(({webContents},id)=>{const wc=webContents.fromId(id)!;wc.sendInputEvent({type:'keyDown',keyCode:'A'});wc.sendInputEvent({type:'keyUp',keyCode:'A'});},sourceId);
+  await script(`window.open(${JSON.stringify(cross('/second'))});void 0`);
+  await expect.poll(async () => (await state()).popups?.blockedCount).toBe(2);
+  await script(`document.getElementById('blank').onmouseover=()=>window.open(${JSON.stringify(cross('/second'))});void 0`);
+  await app.evaluate(({webContents},id)=>{webContents.fromId(id)!.sendInputEvent({type:'mouseMove',x:10,y:10});},sourceId);
+  await script(`window.open(${JSON.stringify(cross('/second'))});void 0`);
+  await expect.poll(async () => (await state()).popups?.blockedCount).toBeGreaterThanOrEqual(3);
+  const original=(await state()).activeTabId!;
+  await ui.evaluate(()=>window.browser.openTab());
+  await script(`window.open(${JSON.stringify(cross('/second'))});void 0`);
+  expect((await state()).tabs).toHaveLength(2);
+  await ui.evaluate(id=>window.browser.activateTab(id),original);
+  const pending=(await state()).popups!.pending!;
+  expect(await ui.evaluate(({id,requestId})=>window.browser.resolvePopup(id,requestId,'invalid' as never),{id:original,requestId:pending.requestId})).toMatchObject({ok:false,errorCode:'INVALID_INPUT'});
+});
+
+test('popup floods retain one opaque review ticket, cap counters and never expose full destinations',async()=>{
+  await script(`window.open('https://popads.net/first?privateQuery=should-not-reach-ui');void 0`);
+  await expect.poll(async()=>(await state()).popups?.blockedCount).toBe(1);
+  const requestId=(await state()).popups!.pending!.requestId;
+  await script(`for(let i=0;i<1005;i++)window.open('https://popads.net/flood?privateQuery='+i);void 0`);
+  await expect.poll(async()=>(await state()).popups?.blockedCount).toBe(999);
+  const s=await state();expect(s.popups!.pending!.requestId).toBe(requestId);
+  expect(JSON.stringify(s.popups)).not.toContain('privateQuery');
+  expect(s.tabs).toHaveLength(1);
+  expect(await app.evaluate(({webContents})=>webContents.getAllWebContents().length)).toBe(2);
+  await ui.evaluate(async id=>{await window.browser.setAdBlocking(id,false);},s.activeTabId!);
+  await expect.poll(async()=>(await state()).popups?.pending?.recoverable).toBe(true);
+  await ui.evaluate(({id,requestId})=>window.browser.resolvePopup(id,requestId,'dismiss'),{id:s.activeTabId!,requestId});
+  await expect.poll(async()=>(await state()).popups?.pending).toBe(null);
 });

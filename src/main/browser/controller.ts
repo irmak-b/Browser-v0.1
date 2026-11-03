@@ -94,13 +94,18 @@ export class BrowserController {
         const id = this.tabs.activeId;
         if (id && !this.disposed && !this.switching && this.modalDepth === 0 && wc === this.tabs.peekContents(id)) this.zoom(id, direction);
       }, () => !this.disposed && !this.switching && this.modalDepth === 0 && this.viewport?.visible !== false,
-      wc => this.sessions.filter(this.identity).cancelNavigation(wc));
+      wc => this.sessions.filter(this.identity).cancelNavigation(wc),
+      (url,source)=>this.sessions.filter(this.identity).blocksPopup(url,source));
   }
   private canFullscreen(wc: WebContents) {
     return !this.disposed && !this.switching && this.modalDepth === 0 && this.viewport?.visible !== false
       && !this.window.isDestroyed() && this.window.isFocused() && wc.isFocused() && this.tabs?.hasRecentGesture(wc);
   }
   exitFullscreen() { this.available(); this.fullscreen.exit(); return null; }
+  resolvePopup(id:string,requestId:string,action:'open-once'|'allow-site'|'dismiss'){
+    this.available();return this.tabs.resolvePopup(id,requestId,action);
+  }
+  resetPopupPermission(id:string){this.available();return this.tabs.resetPopupPermission(id);}
   private available() { if (this.switching || this.disposed) throw new BrowserFault('OPERATION_CANCELLED', 'Bağlam değişiyor veya kapanıyor.'); }
   async switchIdentity(identity: DevelopmentIdentity) {
     if (app.isPackaged) throw new BrowserFault('POLICY_BLOCKED', 'Test kullanıcısı yalnız geliştirmede seçilir.');
@@ -135,6 +140,7 @@ export class BrowserController {
   retryHistory() { this.available(); this.history.retry(); return null; }
   snapshot(): BrowserSnapshot {
     return {
+      popups: this.tabs.popupSnapshot(),
       find: this.pageTools.snapshot(),
       zoomFactor: this.tabs.peekContents(this.tabs.activeId ?? '')?.getZoomFactor() ?? 1,
       sitePermissions: this.permissions.snapshot(this.tabs.peekContents(this.tabs.activeId ?? '')),
@@ -199,6 +205,7 @@ export class BrowserController {
   setAdBlocking(id:string,enabled:boolean){
     this.available();const wc=this.tabs.contents(id);
     if(!wc||!this.sessions.filter(this.identity).setEnabled(wc,enabled))throw new BrowserFault('OPERATION_CANCELLED','Önce bir sayfa açın veya istisna sınırını kontrol edin.');
+    this.tabs.refreshPopupPolicy();
     this.notice='Reklam engelleme tercihi güncellendi. Önceden yüklenen içerik için sayfayı yenileyin.';this.publish();return null;
   }
   async resetSitePermissions(id: string) {

@@ -90,6 +90,13 @@ export class AdBlocker {
     if(!this.timer){this.timer=setTimeout(()=>{this.timer=undefined;this.changed();},300);this.timer.unref();}
     return true;
   }
+  blocksPopup(url: string, sourceUrl: string): boolean {
+    try {
+      if(this.exceptions.has(new URL(sourceUrl).hostname))return false;
+      const result=filterEngine().match(adRequest(url,sourceUrl,'mainFrame'));
+      return !result.exception && (result.match || isAdHost(new URL(url).hostname));
+    } catch { return true; }
+  }
   async prepareDocument(wc:WebContents){
     const page=this.pages.get(wc);
     if(!page)return;

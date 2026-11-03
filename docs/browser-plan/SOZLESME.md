@@ -13,6 +13,7 @@
 | Sayfa | openFind, findInPage, closeFind, zoom |
 | Ses | setTabMuted |
 | Politikalar | setAdBlocking, resetSitePermissions, setTabKeepAwake |
+| Popup | resolvePopup(tabId, requestId, action), resetPopupPermission(tabId) |
 | İndirme | approveDownload, cancelDownload, onDownloadChanged |
 | Kurtarma | forceCloseUnresponsive, exitFullscreen |
 | Tanı | getResources |
@@ -25,6 +26,8 @@ Geliştirme kimlik/tema/servis simülasyonu yöntemleri gerçek auth değildir; 
 Komut sonucu requestId, contextEpoch ve ok alanlarını taşır. Başarı data, hata errorCode/message içerir. Arayüz eski contextEpoch sonuçlarını uygulamaz.
 
 Snapshot revision ile sıralanır. İlk getState yanıtı daha yeni bir olayın üzerine yazamaz. Arka plan sekmesi adres alanını değiştiremez. Dinleyici kayıtları kaldırılabilir unsubscribe işlevi döndürür.
+
+Popup snapshot'ı yalnız etkin sayfanın kaynak origin'ini, engelleme sayısını, tıklama iznini ve tek inceleme isteğinin kimliği/hedef origin/neden bilgisini taşır. Tam hedef URL main'de kalır. `resolvePopup` eylemleri `open-once`, `allow-site`, `dismiss`'tir; eski belge veya kullanılmış requestId reddedilir. Site izni bu bağlama/oturuma aittir ve yalnız yakın native etkileşimli açılışları kolaylaştırır; otomatik açılışı veya reklam filtresini geçersiz kılmaz.
 
 ## Viewport, modal ve odak
 

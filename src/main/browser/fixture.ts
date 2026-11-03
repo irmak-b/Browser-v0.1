@@ -60,6 +60,8 @@ export async function startFixture() {
       response.end(`<!doctype html><html lang="tr"><meta charset="utf-8"><title>Sayfa ${number}</title><h1>Sayfa ${number}</h1><p id="load-count">Yükleme ${count}</p><input id="state-input" aria-label="Sekme notu" placeholder="Sekmeye özel not"><p><a href="/second">İkinci kontrollü sayfa</a></p></html>`);
     } else if (path === '/redirect') {
       response.writeHead(302, { Location: '/second' }); response.end();
+    } else if (path === '/popup-ad-redirect') {
+      response.writeHead(302, { Location: 'https://popads.net/core-popup-test' }); response.end();
     } else if (path === '/redirect-invalid') {
       response.writeHead(302, { Location: 'app://browser/index.html' }); response.end();
     } else if (path === '/error') {

@@ -2,6 +2,8 @@ import { contextBridge, ipcRenderer } from 'electron';
 import { CHANNEL, type BrowserApi, type BrowserSnapshot, type DevelopmentHistoryMode, type DevelopmentIdentity, type DevelopmentTheme, type DownloadEvent, type ViewportRequest } from '../shared/contracts';
 
 const api: BrowserApi = Object.freeze({
+  resolvePopup: (tabId: string, requestId: string, action: 'open-once' | 'allow-site' | 'dismiss') => ipcRenderer.invoke(CHANNEL.resolvePopup, { tabId, requestId, action }),
+  resetPopupPermission: (tabId: string) => ipcRenderer.invoke(CHANNEL.resetPopupPermission, { tabId }),
   setTabMuted: (tabId: string, muted: boolean) => ipcRenderer.invoke(CHANNEL.tabMuted, { tabId, muted }),
   restoreClosedTab: () => ipcRenderer.invoke(CHANNEL.restoreClosedTab),
   forceCloseUnresponsive: (tabId: string) => ipcRenderer.invoke(CHANNEL.forceCloseUnresponsive, { tabId }),

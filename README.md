@@ -2,7 +2,17 @@
 
 Electron, React ve TypeScript tabanlı masaüstü tarayıcı çekirdeği. Chromium sayfaları ayrı `WebContentsView` içinde çalışır.
 
-**Sürüm:** V1.0.14.1 · **Temel plan:** BrowserPlan V1.0.1.0
+**Sürüm:** V1.0.15.1 · **Temel plan:** BrowserPlan V1.0.1.0
+
+## V1.0.15.1 — ilk yükleme uyumluluğu
+
+İlk yüklemedeki gereksiz popup engelleri azaltıldı; Yandex aramasının ilk açılışta yeni sekmeye geçişi elle doğrulandı. Gerçek JavaScript düğmeleri ve küçük fare hareketleri de desteklenir. Reklam hedefi filtresi ve tek etkileşimde tek açılış korunur. **Bilinen eksik:** Yahoo araması hâlâ popup olarak bekletilip sağ panelden izin gerektirebiliyor; bu akış için uyumluluk işi açık. [Kapsam ve testler](docs/validation/V1.0.15.1.md).
+
+## V1.0.15.0 — popup denetimi
+
+Yeni sekme hedefleri ve ilk HTTP yönlendirmeleri reklam filtresinden geçirilir. Normal bağlantılar ve GET arama formları açılır; bağlantıyla ilgisiz veya otomatik açılışlar inceleme için bekletilir. Adres alanındaki **Popup ayarları** simgesi üzerinden hedef origin görülebilir, bir kez açılabilir veya o siteye bu oturumda tıklamayla açılış izni verilebilir. İzin aynı panelden kaldırılır; reklam filtresi ayrı kalır.
+
+Mevcut sabit listelerdeki popup kuralları kullanılır; ek indirme veya bağımlılık yoktur. Denetim yalnız açılış isteğinde yapılır, sürekli sayfa taraması eklenmez. Sayfa içine çizilmiş reklam katmanları mevcut kozmetik kurallara bağlıdır. [Kapsam ve doğrulama](docs/validation/V1.0.15.0.md).
 
 ## V1.0.14.1 değişikliği
 
@@ -90,7 +100,7 @@ Browser Core ve geçici DevShell çalışır. Geçmiş servisi bellekte tutulur.
 - [Mimari](docs/browser-plan/ARCH.md)
 - [UI–Core sözleşmesi](docs/browser-plan/SOZLESME.md)
 - [Geliştirme ve çalıştırma](README_TR.md)
-- [Test planı](docs/browser-plan/TEST.md) · [Sürüm doğrulaması](docs/validation/V1.0.14.1.md)
+- [Test planı](docs/browser-plan/TEST.md) · [Sürüm doğrulaması](docs/validation/V1.0.15.1.md)
 
 ## Teknik sınırlar
 

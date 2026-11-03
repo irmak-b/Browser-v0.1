@@ -142,6 +142,8 @@ function App() {
           onClick={()=>tab&&void command(()=>window.browser.setAdBlocking(tab.tabId,!state.adBlocking!.enabled))}>
           <svg width="20" height="22" viewBox="0 0 24 26" fill="none" aria-hidden="true"><path d="M12 2 3 6v7c0 5 5 9 9 11 4-2 9-6 9-11V6Z" stroke="currentColor" strokeWidth="2"/>{state.adBlocking.enabled?<path d="m7 13 3 3 7-7" stroke="currentColor" strokeWidth="2"/>:<path d="m8 9 8 8m0-8-8 8" stroke="currentColor" strokeWidth="2"/>}</svg>
         </button>}
+        {state?.popups && <button type="button" className="panel-toggle" aria-label="Popup ayarları" aria-controls="browser-info-panel"
+          title={`${state.popups.blockedCount} popup engellendi · Ayarları aç`} onClick={() => setPanelOpen(true)}>▣{state.popups.blockedCount > 0 && <span className="panel-badge">{state.popups.blockedCount > 9 ? '9+' : state.popups.blockedCount}</span>}</button>}
         <button type="submit" className="go-button" aria-label="Adrese git" title="Adrese git (Enter)">→</button>
         <span className="connection-state" role="status" title={state ? 'Browser Core bağlı' : 'Bağlanıyor…'}><span className={`dot ${state ? 'ready' : ''}`} /><span className="sr-only">{state ? 'Browser Core bağlı' : 'Bağlanıyor…'}</span></span>
         <button ref={panelButton} type="button" className="panel-toggle" aria-label="Bilgi paneli" aria-controls="browser-info-panel" aria-expanded={panelOpen}
@@ -180,6 +182,18 @@ function App() {
       </div>
       <p className="eyebrow">SAYFA DURUMU</p><h2 data-testid="page-title">{tab?.title ?? 'Yeni sekme'}</h2>
       <p className="muted">Etkin sekmenin başlığı ve gezinme durumu.</p>
+      {state?.popups && <section aria-label="Popup denetimi" className="downloads">
+        <strong>Popup denetimi</strong><p data-testid="popup-summary">{state.popups.blockedCount} engellendi · {state.popups.sourceOrigin}</p>
+        <p className="muted">{state.popups.clickAllowed ? 'Bu site için tıklamayla açılışa bu oturumda izin verildi.' : 'Bağlantı ve GET arama formları açılır; diğer açılışlar inceleme için bekletilir.'}</p>
+        {state.popups.clickAllowed && <button type="button" onClick={() => tab && void command(() => window.browser.resetPopupPermission(tab.tabId))}>Site popup iznini kaldır</button>}
+        {state.popups.pending && <div className="download-item" data-testid="blocked-popup">
+          <span>Engellenen hedef: {state.popups.pending.targetOrigin}</span>
+          <small>{state.popups.pending.reason === 'advertising' ? 'Reklam filtresi hedefi engelledi. Site reklam tercihi ayrıca geçerlidir.' : state.popups.pending.reason === 'automatic' ? 'Doğrudan kullanıcı açılışı doğrulanamadı.' : 'Açılış, tıklanan bağlantı veya arama formuyla eşleşmedi.'}</small>
+          {state.popups.pending.recoverable && <><button type="button" onClick={() => tab && void command(() => window.browser.resolvePopup(tab.tabId,state.popups!.pending!.requestId,'open-once'))}>Bir kez aç</button>
+            <button type="button" onClick={() => tab && void command(() => window.browser.resolvePopup(tab.tabId,state.popups!.pending!.requestId,'allow-site'))}>Bu sitede tıklamayla açılışa izin ver</button></>}
+          <button type="button" onClick={() => tab && void command(() => window.browser.resolvePopup(tab.tabId,state.popups!.pending!.requestId,'dismiss'))}>İsteği kaldır</button>
+        </div>}
+      </section>}
       {state?.sitePermissions && <section aria-label="Site izinleri"><strong>Site izinleri</strong>
         <p className="muted">Kararlar bu site ve uygulama oturumu için geçerli.</p>
         <ul>{state.sitePermissions.decisions.map(item => <li key={item.permission}>
