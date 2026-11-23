@@ -48,3 +48,5 @@ V1.0.15.0 ayrıca bağlantıyla ilgisiz açılışı bekletme, bir kez açma, or
 V1.0.15.1; ilk yüklemede yanıt vermeyen/değişen DOM, GET araması, gerçek script düğmeleri, küçük fare hareketi ve açık shadow-DOM denetimlerini kapsar. Olumsuz niyet ile yanıt alınamaması ayrılır; yeni uyumluluk yolu eski reklam/otomatik açılış korumalarıyla birlikte doğrulanır. [Doğrulama](../validation/V1.0.15.1.md).
 
 V1.0.15.2; action'sız role=search GET başlatıcısını, sorgusuz hizmet açılışını, Enter/düğme gönderimini ve bu formdaki reklam hedefi reddini kapsar. Açık farklı action, sıradan metin formu ve POST yöntemi kapsamı genişletmez. [Doğrulama](../validation/V1.0.15.2.md).
+
+V1.0.16.0 menü yerleşimini, mevcut komutlara erişimi, bağlantısız veritabanı ekranını ve örnek parolanın gösterme/gizleme akışını kapsar. [Doğrulama](../validation/V1.0.16.0.md).

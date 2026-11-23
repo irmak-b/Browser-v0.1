@@ -2,7 +2,13 @@
 
 Electron, React ve TypeScript tabanlı masaüstü tarayıcı çekirdeği. Chromium sayfaları ayrı `WebContentsView` içinde çalışır.
 
-**Sürüm:** V1.0.15.2 · **Temel plan:** BrowserPlan V1.0.1.0
+**Sürüm:** V1.0.16.0 · **Temel plan:** BrowserPlan V1.0.1.0
+
+## V1.0.16.0 — Tarayıcı menüsü
+
+Adres çubuğunun sağındaki **☰** üzerinden Ayarlar, Geçmiş, İndirmeler, Parolalar, Eklentiler ve Veritabanını gör açılır. Ayarlar etkin sekmenin izinlerine, reklam engeline ve uyutma tercihine erişir. Geçmişteki ziyaretler yeni sekmede açılabilir. **ⓘ** mevcut Bilgi panelini açar.
+
+**Veritabanını gör** ekranında veri getirme ve ekleme için bağlantı noktaları vardır. Servis bağlanana kadar işlemler bağlantı durumunu bildirir. Göz simgesi yalnız sunum için kullanılan örnek değeri gösterir. Parola kasası ve eklenti kurulumu bekleyen işlerdir.
 
 ## V1.0.15.2 — Yahoo arama uyumluluğu
 
@@ -57,7 +63,7 @@ Git yerine GitHub'da **Code → Download ZIP** ile de indirilebilir. ZIP'i tamam
 
 İlk kurulum npm bağımlılıklarını ve [Electron runtime'ını](https://www.electronjs.org/docs/latest/tutorial/installation) indirir; internet gerekir. React, TypeScript ve Electron proje bağımlılıklarıdır; ayrıca global kurulum gerekmez. Mevcut Core'u açmak için Neon hesabı, veritabanı kurulumu veya `.env` gerekmez.
 
-Electron masaüstü penceresi açıldığında adres alanından gezinilebilir. **☰ → Test sayfasını aç** yerel kontrol sayfasını açar. Geliştirme terminalini açık tutun; durdurmak için terminalde **Ctrl+C** kullanın.
+Electron masaüstü penceresi açıldığında adres alanından gezinilebilir. **ⓘ → Test sayfasını aç** yerel kontrol sayfasını açar. Geliştirme terminalini açık tutun; durdurmak için terminalde **Ctrl+C** kullanın.
 
 ### Sonraki açılışlar
 
@@ -74,7 +80,7 @@ Proje klasöründe `npm run dev` yeterlidir. Git ile klonlanan kopyayı güncell
 | Alan | Konum ve bağlantı |
 | --- | --- |
 | UI / Tailwind / tema / maskot | Mevcut örnek `src/renderer/dev/`; renderer giriş dosyası `src/renderer/index.html`. Nihai UI, `window.browser` API'sini tüketir |
-| Backend / auth / Neon | Ayrı servis için `backend/` önerilir. Browser bağlantısı, `src/main/browser/history.ts` içindeki `HistorySink` adaptörü üzerinden kurulur |
+| Backend / auth / Neon | Ayrı servis için `backend/` önerilir. Veritabanı ekranının bağlantı noktaları `database-service.ts`, ziyaret yazma bağlantısı `HistorySink` |
 | TOTP / kasa | Masaüstü modülü için `src/main/security/` önerilir; server tarafındaki MFA/auth işlemleri backend servisinde kalır. UI bağlantısı dar preload/IPC sözleşmesiyle yapılır |
 | Browser Core | `src/main/browser/`, `src/preload/`, `src/shared/` ve ilgili `tests/` dosyaları |
 
@@ -91,10 +97,31 @@ Modül çalışmaları için ayrı Git dalları kullanılması önerilir. Başla
 - Ağ, CSS ve scriptlet tabanlı reklam filtresi.
 - Hafif boş sekmeler, korumalı uyutma/dondurma ve önbellek.
 - Kompakt sekme/adres alanı ve açılıp kapanabilen Bilgi paneli.
+- Tarayıcı menüsü, oturum geçmişi ve mevcut indirmelere erişim.
 
 ## Proje durumu
 
 Browser Core ve geçici DevShell çalışır. Geçmiş servisi bellekte tutulur. Nihai React/Tailwind arayüzü, gerçek kimlik doğrulama, backend API, Neon PostgreSQL ve TOTP/kasa entegrasyonları henüz tamamlanmamıştır.
+
+## Yapılacaklar
+
+### Veritabanı ekranını backend'e bağlama
+
+[Veritabanı ekranı](src/renderer/dev/DatabasePanel.tsx), [servis modülündeki](src/renderer/dev/database-service.ts) iki boş fonksiyonu çağırır. Şu anda ikisi de bağlantı olmadığını belirten `null` döndürür.
+
+| Fonksiyon | Backend hazır olduğunda eklenecek iş |
+| --- | --- |
+| `fetchDatabaseRecords()` | Oturuma ait kayıtları yetkili API'den getir. Sunum için yer imleriyle başlanabilir. Başarılı boş listeyi `[]` olarak döndür. |
+| `addDatabaseRecord(record)` | Form verisini API'ye gönder. Sunucu girdiyi ve kayıt sahipliğini doğruladıktan sonra oluşan kaydı kimliğiyle döndür. |
+
+Backend ekibi API sözleşmesini, oturum doğrulamasını, kayıt sahipliğini, Neon şemasını ve sunucudaki PostgreSQL bağlantısını hazırlar. UI ekibi bu paneli nihai arayüze taşır ve form alanlarını API sözleşmesine göre düzenler. Tarayıcı ekibi, gerekiyorsa API'yi dar bir main/preload adaptöründen çağırır. Ziyaretlerin yazılması için [`HistorySink`](src/main/browser/history.ts) kullanılır. [Mimari plan](docs/browser-plan/ARCH.md)
+
+### Sonraki özellikler
+
+- **Sunum akışı:** Yer imi güncelleme ve silme, ardından aynı hesabın iki cihazında değişikliği doğrulama.
+- **Geçmiş:** Arama, tarih filtresi ve kullanıcı tercihine bağlı eşitleme.
+- **Parolalar:** Güvenlik ekibinin kasası üzerinden, kilit açıldıktan sonra tek kaydı gösterme. Genel veritabanı liste API'si yalnız hassas olmayan alanları döndürür.
+- **Eklentiler:** Uyumlu açılmış eklentileri ayrı bir kalıcı oturumda incele. Mevcut site oturumları bellektedir. Electron Chrome eklenti API'lerinin bir alt kümesini destekler. Web Mağazası'ndan kurulum bu kapsamda kullanılamaz. [Electron eklenti desteği](https://www.electronjs.org/docs/latest/api/extensions)
 
 ## Belgeler
 
@@ -104,7 +131,7 @@ Browser Core ve geçici DevShell çalışır. Geçmiş servisi bellekte tutulur.
 - [Mimari](docs/browser-plan/ARCH.md)
 - [UI–Core sözleşmesi](docs/browser-plan/SOZLESME.md)
 - [Geliştirme ve çalıştırma](README_TR.md)
-- [Test planı](docs/browser-plan/TEST.md) · [Sürüm doğrulaması](docs/validation/V1.0.15.2.md)
+- [Test planı](docs/browser-plan/TEST.md) · [Sürüm doğrulaması](docs/validation/V1.0.16.0.md)
 
 ## Teknik sınırlar
 

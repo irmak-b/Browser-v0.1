@@ -18,7 +18,7 @@ npm run dev
 
 Bağımlılık ve Electron kurulumu ağ kullanır. Mevcut runtime yeniden kurulmadan kullanılabilir. Geliştirme için gerçek veritabanı veya hesap bilgisi gerekmez.
 
-Sonraki açılışlarda `npm run dev` çalıştırılır. Pencere açıldığında **☰ → Test sayfasını aç** ile yerel kontrol yapılabilir. Terminalden Ctrl+C geliştirme oturumunu durdurur.
+Sonraki açılışlarda `npm run dev` çalıştırılır. Pencere açıldığında **ⓘ → Test sayfasını aç** ile yerel kontrol yapılabilir. Terminalden Ctrl+C geliştirme oturumunu durdurur.
 
 ## Kontroller
 
@@ -49,7 +49,7 @@ Paket, Electron runtime dosyalarıyla birlikte çalışır; yalnız EXE dosyası
 
 ## Arayüz ve kısayollar
 
-Bilgi paneli ☰ ile açılır. Sayfa araçları, indirmeler, site izinleri ve kaynak bilgileri bu paneldedir.
+**ⓘ** Bilgi panelini açar. Sayfa araçları, indirmeler, site izinleri ve kaynak bilgileri bu paneldedir. **☰** tarayıcı menüsünü açar. Veritabanı ekranı ve bekleyen entegrasyonlar [ana README'de](README.md#yapılacaklar) açıklanır.
 
 | Kısayol | İşlev |
 | --- | --- |

@@ -1,5 +1,5 @@
 {
-  "version": "V1.0.15.2",
+  "version": "V1.0.16.0",
   "method": "Explicit source allowlist; no Git index, remote, commit or push. Never reads excluded secret/profile/cache/tool files. Limited pattern scan of included text is not a comprehensive secret guarantee. Review flags contain category and file name only, never matching content.",
   "manifestSelf": "This JSON is intended for the repository too, but excludes its own hash to avoid a circular manifest.",
   "files": [
@@ -12,7 +12,7 @@
     {
       "path": "app-version.json",
       "bytes": 77,
-      "sha256": "39e87f52e2332bfd09ca6d241c64609695e8819c6d2609ce51b85e75a88e78ac",
+      "sha256": "1cd460729cf843648c7fbea58b621b345263fe203d92c91bded704bca0bf3043",
       "reviewFlags": []
     },
     {
@@ -47,20 +47,20 @@
     },
     {
       "path": "docs/browser-plan/TEST.md",
-      "bytes": 3323,
-      "sha256": "fb9ab8e101fa6ee9de5267c03c23238f3364d306c850ad3638fbb8fa115556a8",
+      "bytes": 3520,
+      "sha256": "b30105b7479cb9796cfdf60783599e55b0a8e400f29414986a1a4c68fc86b2a3",
       "reviewFlags": []
     },
     {
       "path": "docs/CORE_DURUM_TR.md",
-      "bytes": 2651,
-      "sha256": "d81afae7df2fef788387aa378915c656133a0882345d38b709a1d0e889dffd72",
+      "bytes": 2831,
+      "sha256": "7ad30de1b91545fc12fd94744be7feef253088dc0b751c8701c3e9b32787cec0",
       "reviewFlags": []
     },
     {
       "path": "docs/GITHUB_DEVIR_TR.md",
-      "bytes": 6818,
-      "sha256": "8ce1230ebcf9b521f2ba28e0457722ebda62c036cf7e91423e0a85f068a09eb2",
+      "bytes": 7013,
+      "sha256": "34d2908d98826ee7065a0b9db39d2eb0aad6add1389980c0ae48c491c5bac7ef",
       "reviewFlags": []
     },
     {
@@ -196,6 +196,12 @@
       "reviewFlags": []
     },
     {
+      "path": "docs/validation/V1.0.16.0.md",
+      "bytes": 1761,
+      "sha256": "707d947901a68a07a911c6e08a7a9c4876418f0fcac98e59008f47eda80e6ae4",
+      "reviewFlags": []
+    },
+    {
       "path": "docs/WINDOWS_CALISTIR_TR.txt",
       "bytes": 1039,
       "sha256": "dc587f4cfbbf766353cbc710758e467b5fa7ca2406ec52ac084fff850c654add",
@@ -210,13 +216,13 @@
     {
       "path": "package-lock.json",
       "bytes": 88425,
-      "sha256": "162a590fcdb6e8e3e205abe00cf4450596cd13579a3cb72c7c3ca789fd10c552",
+      "sha256": "ef707f76d56a8f6e6c2956f74482ebea1b2f6af624de279dab9bdbc02bd02d42",
       "reviewFlags": []
     },
     {
       "path": "package.json",
       "bytes": 1465,
-      "sha256": "f0e669e055d5751b39ef960317a9ce356d1a90562b852e391ded52c49ffcbb34",
+      "sha256": "48cf62c4fd674b727f048ae2a8877162eb18064ca36b61b9831f5e33d0c252cc",
       "reviewFlags": []
     },
     {
@@ -233,20 +239,20 @@
     },
     {
       "path": "README_TR.md",
-      "bytes": 2579,
-      "sha256": "95c24a41582da2a4390c295b151e34d1ce61c7581271139f9d71b655c3a11ac7",
+      "bytes": 2717,
+      "sha256": "39e8ba45ad8dbcb6d88672b8961bc8c80e256cc7021e959d32d0e6ee93569c10",
       "reviewFlags": []
     },
     {
       "path": "README.md",
-      "bytes": 8601,
-      "sha256": "a938046469dc4191a389c43d0e1e85b2120dcf193b777dbd1d37c548d00088be",
+      "bytes": 11196,
+      "sha256": "2e600b77c8e98e38009fa727159f4b321d5c97ac3c09dbccd195968d87f8fa7d",
       "reviewFlags": []
     },
     {
       "path": "scripts/build-github-inventory.mjs",
-      "bytes": 4972,
-      "sha256": "d3787d9ee05dba364db0c905830b53285c6914d3a7fc016bd4255e83a7e7e7dd",
+      "bytes": 5003,
+      "sha256": "93d1fc38b0a4fd9a4869e15b1afb3caf7102a8ebf482210674af20e5e2f954f8",
       "reviewFlags": []
     },
     {
@@ -814,6 +820,24 @@
       "reviewFlags": []
     },
     {
+      "path": "src/renderer/dev/BrowserToolsPanel.tsx",
+      "bytes": 3920,
+      "sha256": "7374637a434b011208e543297326b96f3b6824efeaa690968ea9db042cf35b08",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/dev/database-service.ts",
+      "bytes": 538,
+      "sha256": "00ea82827f0c14fddd127074868e372e47be8efa1ac7eb682f3314715d1c53c3",
+      "reviewFlags": []
+    },
+    {
+      "path": "src/renderer/dev/DatabasePanel.tsx",
+      "bytes": 3278,
+      "sha256": "1af48b470ec6336727c653f29e6c7d6f43d4f12ae64e226034619b6de62833b9",
+      "reviewFlags": []
+    },
+    {
       "path": "src/renderer/dev/env.d.ts",
       "bytes": 118,
       "sha256": "418070b6774e03d00e91d0a8f19e6d4d5668f47680bdd683bed6f21cd965842b",
@@ -821,14 +845,14 @@
     },
     {
       "path": "src/renderer/dev/main.tsx",
-      "bytes": 24765,
-      "sha256": "7d4d3be1a6ff2863d1574be4151817bff36769ddd78b3dc9d7a765c28d3cb351",
+      "bytes": 26128,
+      "sha256": "ba0edb74290671f0687582ad73b97fab189b3a117766086d018ff4218d3cc616",
       "reviewFlags": []
     },
     {
       "path": "src/renderer/dev/style.css",
-      "bytes": 8884,
-      "sha256": "b16b23e96e7a8da4434f779e80d994d469a1cb1594d050d0e34ed34ea678f154",
+      "bytes": 10792,
+      "sha256": "ad6eaba298148b92c052939992d221e06a11f50a7dea446d2c508cdd6c3a818e",
       "reviewFlags": []
     },
     {
@@ -1009,6 +1033,12 @@
       "path": "tests/electron/a5.spec.ts",
       "bytes": 6869,
       "sha256": "0973f8deb4f4fe6c86262914e9c7d4858c0850aec0c009fbc30b34c86982a11c",
+      "reviewFlags": []
+    },
+    {
+      "path": "tests/electron/browser-tools.spec.ts",
+      "bytes": 5097,
+      "sha256": "9f67398a2bf393f4fb42405a475f8aae6c4c88de93bedf1baaaed037eab95164",
       "reviewFlags": []
     },
     {
@@ -1336,8 +1366,8 @@
       "reviewFlags": []
     }
   ],
-  "fileCount": 222,
-  "totalBytes": 11308265,
+  "fileCount": 227,
+  "totalBytes": 11329466,
   "reviewFlaggedFiles": 0,
   "excluded": [
     "node_modules/",

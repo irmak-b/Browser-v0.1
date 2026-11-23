@@ -9,3 +9,52 @@
 .mute-tab{border:0;background:transparent;padding:3px;font-size:12px;line-height:18px;flex:0 0 auto}
 /* Compact host chrome; diagnostics reserve width only while explicitly open. */
 header{padding:0 8px}.address-row{gap:6px}.address{height:34px;padding:0 10px}.navigation button,.home-button,.go-button,.panel-toggle{height:34px;padding:4px 9px;line-height:24px}.go-button,.panel-toggle{font-size:18px;font-weight:400}.ad-shield{padding:5px;height:34px}.ad-shield svg{width:18px;height:20px}.panel-toggle{position:relative}.panel-badge{position:absolute;right:-3px;top:-4px;font-size:11px;font-weight:700;line-height:15px;width:15px;border-radius:50%;background:#a34324;color:#fff}.connection-state{display:flex;align-items:center;padding:0 2px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}aside{padding:14px 16px}aside[hidden]{display:none}.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.panel-heading button{padding:3px 10px;font-size:19px}.panel-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;border-bottom:1px solid #e5e9f1;padding-bottom:16px;margin-bottom:18px}.panel-controls>span:first-child{width:100%}.panel-controls button{padding:6px 8px;font-size:11px}.panel-controls .page-tools{margin-left:0;flex-wrap:wrap;gap:4px}
+
+.browser-tools {
+  --tools-line: #dbe3ee;
+  --tools-secondary: #536681;
+  font-size: 13px;
+}
+.shell[data-theme=dark] .browser-tools {
+  --tools-line: #435578;
+  --tools-secondary: #b8c6dd;
+}
+.browser-tools .panel-heading h2 { margin: 0; }
+.browser-tools h3 { margin: 18px 0 8px; font-size: 14px; }
+.browser-tools p { color: var(--tools-secondary); line-height: 1.55; overflow-wrap: anywhere; }
+.tools-navigation { display: grid; gap: 6px; }
+.tools-navigation button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  padding: 9px 10px;
+}
+.tools-navigation span { font-size: 16px; color: var(--tools-secondary); }
+.tools-back, .tools-action { padding: 6px 9px; }
+.tools-settings, .database-form, .database-form label { display: grid; gap: 8px; }
+.tools-settings label { display: flex; align-items: center; gap: 6px; }
+.tools-settings button { justify-self: start; padding: 7px 9px; }
+.tools-list { list-style: none; padding: 0; margin: 12px 0; }
+.tools-list li { padding: 8px 0; border-bottom: 1px solid var(--tools-line); overflow-wrap: anywhere; }
+.tools-list button {
+  width: 100%;
+  padding: 7px 8px;
+  text-align: left;
+  white-space: normal;
+}
+.tools-list span { display: block; margin-top: 4px; color: var(--tools-secondary); font-size: 11px; }
+.database-form, .tools-password { border-top: 1px solid var(--tools-line); margin-top: 16px; padding-top: 12px; }
+.database-form input {
+  min-width: 0;
+  width: 100%;
+  border: 1px solid var(--tools-line);
+  border-radius: 6px;
+  padding: 7px 8px;
+  background: transparent;
+  color: inherit;
+}
+.database-form button { justify-self: start; padding: 7px 9px; }
+.tools-password { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.tools-password code { display: block; margin-top: 4px; overflow-wrap: anywhere; }
+.tools-icon { display: grid; place-items: center; padding: 6px; }

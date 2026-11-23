@@ -1,6 +1,6 @@
 # Browser Core — modül ve kaynak rehberi
 
-**Uygulama:** V1.0.15.2 · **Başlangıç planı:** BrowserPlan V1.0.1.0
+**Uygulama:** V1.0.16.0 · **Başlangıç planı:** BrowserPlan V1.0.1.0
 
 Bu belge projenin parçalarını, genişletme noktalarını, değiştirilebilir bileşenleri ve kaynak deposunun kapsamını tanımlar.
 
@@ -30,6 +30,7 @@ Reklam filtresi, arka plan kaynak yönetimi ve ek tarayıcı araçları bu temel
 | `src/preload/index.ts`, `src/main/ipc.ts` | Güvenilen UI–main bağlantısı | Yeni API'nin preload ve IPC uygulaması |
 | `src/renderer/dev` | Geçici çalışan arayüz | Nihai React/Tailwind arayüzü, tema ve maskot |
 | `src/main/browser/history.ts` | HistorySink ve bellek geçmişi | Yetkili backend API adaptörü; idempotent kayıt ve metadata güncellemesi |
+| `src/renderer/dev/database-service.ts` | Veritabanı menüsünün boş getirme ve ekleme fonksiyonları | Auth kullanan backend API bağlantısı; [yapılacaklar](../README.md#yapılacaklar) |
 | `src/main/browser/site-sessions.ts` | Session ve profil bağlamı | Gerçek kimlik sağlayıcısından gelen güvenilir bağlam |
 | `src/main/browser/site-permissions.ts` | Desteklenen site izinleri | İzin politikası ve arayüz entegrasyonu |
 | `src/main/browser/downloads.ts` | Onay, hedef, ilerleme ve iptal | Ek indirme türlerinin ayrı doğrulama ve testlerle desteklenmesi |

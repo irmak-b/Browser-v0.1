@@ -4,14 +4,18 @@ import { LAYOUT, newerSnapshot, type BrowserSnapshot, type CommandResult, type R
 import './style.css';
 import { ThemeProvider } from '../theme/ThemeProvider';
 import '../theme/tokens.css';
+import { BrowserToolsPanel, type BrowserToolsPage } from './BrowserToolsPanel';
 
 function App() {
   const [state, setState] = useState<BrowserSnapshot | null>(null);
   const [input, setInput] = useState('');
   const [error, setError] = useState('');
   const [infoOpen, setInfoOpen] = useState(false);
-  const [panelOpen, setPanelOpen] = useState(false);
+  const [panel, setPanel] = useState<BrowserToolsPage | 'info' | null>(null);
+  const panelOpen = panel === 'info' || panel === 'downloads';
   const panelButton = useRef<HTMLButtonElement>(null);
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const downloadSection = useRef<HTMLElement>(null);
   const [findText, setFindText] = useState('');
   const findInput = useRef<HTMLInputElement>(null);
   const findTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -63,6 +67,9 @@ function App() {
   }, [findText, findOwner, contextEpoch]);
   useEffect(()=>{setResources(null);},[contextEpoch]);
   useEffect(() => {
+    if (panel === 'downloads') downloadSection.current?.focus();
+  }, [panel]);
+  useEffect(() => {
     const element = siteArea.current;
     if (!element || !contextEpoch) return;
     let cancelled = false;
@@ -80,7 +87,7 @@ function App() {
     observer.observe(element);
     update();
     return () => { cancelled = true; observer.disconnect(); };
-  }, [infoOpen, panelOpen, contextEpoch, !!state?.fullscreen]);
+  }, [infoOpen, !!panel, contextEpoch, !!state?.fullscreen]);
 
   async function command(action: () => Promise<CommandResult<unknown>>, expectedTabId?: string) {
     setError('');
@@ -105,7 +112,10 @@ function App() {
     address.current?.focus();
   }
   function closeInfo() { setInfoOpen(false); infoButton.current?.focus(); }
-  function closePanel() { setPanelOpen(false); panelButton.current?.focus(); }
+  function closePanel() {
+    setPanel(null);
+    (panel === 'info' ? panelButton : menuButton).current?.focus();
+  }
   function find(direction: 'next' | 'previous') {
     clearTimeout(findTimer.current);
     if (findOwner) void command(() => window.browser.findInPage(findOwner, findText, direction));
@@ -117,7 +127,7 @@ function App() {
   const historyLabels = { 'memory-only': 'Yalnız bellekte · uygulama kapanınca silinir', pending: 'Bekleyen geliştirme kaydı var', offline: 'Çevrimdışı · kayıt bekliyor', timeout: 'Zaman aşımı · kayıt bekliyor', unauthorized: 'Yetkilendirme gerekli · kayıt bekliyor', forbidden: 'Erişim reddedildi · kayıt bekliyor', 'queue-full': 'Kuyruk dolu · bazı kayıtlar alınamadı', unavailable: 'Servis kullanılamıyor · kayıt bekliyor' };
 
   return <div className={`shell${state?.fullscreen ? ' fullscreen-shell' : ''}`} data-theme={state?.theme ?? 'light'} style={{
-    '--toolbar-height': `${LAYOUT.toolbarHeight + (findOwner ? 42 : 0)}px`, '--sidebar-width': `${panelOpen ? LAYOUT.infoPanelWidth : 0}px`,
+    '--toolbar-height': `${LAYOUT.toolbarHeight + (findOwner ? 42 : 0)}px`, '--sidebar-width': `${panel ? LAYOUT.infoPanelWidth : 0}px`,
   } as CSSProperties}>
     <header>
       <div className="tabs-row"><div role="tablist" aria-label="Sekmeler" className="tabs">
@@ -143,12 +153,16 @@ function App() {
           <svg width="20" height="22" viewBox="0 0 24 26" fill="none" aria-hidden="true"><path d="M12 2 3 6v7c0 5 5 9 9 11 4-2 9-6 9-11V6Z" stroke="currentColor" strokeWidth="2"/>{state.adBlocking.enabled?<path d="m7 13 3 3 7-7" stroke="currentColor" strokeWidth="2"/>:<path d="m8 9 8 8m0-8-8 8" stroke="currentColor" strokeWidth="2"/>}</svg>
         </button>}
         {state?.popups && <button type="button" className="panel-toggle" aria-label="Popup ayarları" aria-controls="browser-info-panel"
-          title={`${state.popups.blockedCount} popup engellendi · Ayarları aç`} onClick={() => setPanelOpen(true)}>▣{state.popups.blockedCount > 0 && <span className="panel-badge">{state.popups.blockedCount > 9 ? '9+' : state.popups.blockedCount}</span>}</button>}
+          title={`${state.popups.blockedCount} popup engellendi · Ayarları aç`} onClick={() => setPanel('info')}>▣{state.popups.blockedCount > 0 && <span className="panel-badge">{state.popups.blockedCount > 9 ? '9+' : state.popups.blockedCount}</span>}</button>}
         <button type="submit" className="go-button" aria-label="Adrese git" title="Adrese git (Enter)">→</button>
         <span className="connection-state" role="status" title={state ? 'Browser Core bağlı' : 'Bağlanıyor…'}><span className={`dot ${state ? 'ready' : ''}`} /><span className="sr-only">{state ? 'Browser Core bağlı' : 'Bağlanıyor…'}</span></span>
         <button ref={panelButton} type="button" className="panel-toggle" aria-label="Bilgi paneli" aria-controls="browser-info-panel" aria-expanded={panelOpen}
           title={error || state?.notice || (tab?.errorCode ? `Sayfa hatası: ${tab.errorCode}` : 'Bilgi panelini aç/kapat')}
-          onClick={() => setPanelOpen(open => !open)}>☰{(error || state?.notice || tab?.errorCode || state?.downloads.some(item => item.status === 'awaiting-approval')) && <span className="panel-badge" aria-label="İlgilenilmesi gereken bildirim">!</span>}</button>
+          onClick={() => setPanel(current => current === 'info' ? null : 'info')}>ⓘ{(error || state?.notice || tab?.errorCode || state?.downloads.some(item => item.status === 'awaiting-approval')) && <span className="panel-badge" aria-label="İlgilenilmesi gereken bildirim">!</span>}</button>
+        <button ref={menuButton} type="button" className="panel-toggle" aria-label="Tarayıcı menüsü" title="Tarayıcı menüsü"
+          aria-expanded={panel !== null && panel !== 'info'}
+          aria-controls={panel === 'downloads' ? 'browser-info-panel' : panel && panel !== 'info' ? 'browser-tools-panel' : undefined}
+          onClick={() => setPanel(current => current && current !== 'info' ? null : 'menu')}>☰</button>
       </form>
       {state?.find && <form className="find-row" role="search" aria-label="Sayfa içinde arama" onSubmit={event => { event.preventDefault(); find('next'); }}>
         <input ref={findInput} aria-label="Sayfada ara" maxLength={256} value={findText} onChange={event => setFindText(event.target.value)} autoComplete="off" spellCheck={false} />
@@ -214,7 +228,8 @@ function App() {
       <dl><dt>Bağlantı</dt><dd>{state ? 'Bağlı · main süreç' : 'Bağlanıyor…'}</dd><dt>Sayfa</dt><dd data-testid="page-status">{status}</dd><dt>Veri servisi</dt><dd>Bağlı değil · geliştirme</dd><dt>Uygulama sürümü</dt><dd>{state?.appVersion ?? '—'}</dd></dl>
       {tab?.errorCode !== 'RENDER_PROCESS_UNRESPONSIVE' && (error || tab?.errorCode) && <div role="alert" className="error">{error || `Sayfa yüklenemedi (${tab?.errorCode}). Başka bir adres veya test sayfasını deneyin.`}</div>}
       {state?.notice && <div role="status" data-testid="policy-notice" className="policy-notice">{state.notice}</div>}
-      <section className="downloads" aria-label="İndirmeler"><strong>İndirmeler</strong>
+      <section className="downloads" aria-label="İndirmeler" ref={downloadSection} tabIndex={-1}><strong>İndirmeler</strong>
+        {panel === 'downloads' && <p><button type="button" onClick={() => setPanel('menu')}>← Menüye dön</button></p>}
         {!state?.downloads.length && <p>İndirme yok. Dosyalar otomatik açılmaz.</p>}
         {state?.downloads.map((item) => <div className="download-item" key={item.downloadId} data-testid="download-item"><span>{item.filename}</span><small>{item.receivedBytes.toLocaleString('tr-TR')} / {item.totalBytes.toLocaleString('tr-TR')} bayt · {downloadLabels[item.status]}</small>
           <progress aria-label="İndirme ilerlemesi" max={item.totalBytes} value={item.receivedBytes} />
@@ -236,6 +251,11 @@ function App() {
       <button ref={infoButton} className="info-button" onClick={() => setInfoOpen(true)}>Geliştirme bilgisi</button>
       <p className="footnote">Geçici DevShell · Nihai arayüz ayrı ekipte</p>
     </aside>
+    {!state?.fullscreen && panel && panel !== 'info' && panel !== 'downloads' && <BrowserToolsPanel key={contextEpoch} page={panel}
+      state={state} tab={tab} selectPage={setPanel} close={closePanel} command={command} openHistory={url => {
+        closePanel();
+        void command(() => window.browser.openTab(url));
+      }} />}
     {infoOpen && <div className="modal-layer"><section role="dialog" aria-modal="true" aria-labelledby="info-title" onKeyDown={(event) => { if (event.key === 'Tab') event.preventDefault(); if (event.key === 'Escape') closeInfo(); }}><p className="eyebrow">GELİŞTİRME MODU</p><h2 id="info-title">A4 tarayıcı ve geliştirme geçmişi</h2><p>Geçmiş yalnız bellekte tutulur; gerçek giriş ve sunucu kaydı yoktur.</p><p>Panel açıkken native sayfalar gizlenir.</p><button autoFocus className="primary" onClick={closeInfo}>Sayfaya dön</button></section></div>}
   </div>;
 }
